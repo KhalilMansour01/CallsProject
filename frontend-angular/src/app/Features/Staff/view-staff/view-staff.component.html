@@ -1,0 +1,42 @@
+<div class="staff-form">
+  <h2>Staff Details</h2>
+  <div *ngIf="staff">
+      <div>
+        <label>ID:</label>
+        <p>{{ staff.id }}</p>
+      </div>
+      <div>
+        <label>First Name:</label>
+        <p>{{ staff.firstName }}</p>
+      </div>
+      <div>
+        <label>Middle Name:</label>
+        <p>{{ staff.middleName }}</p>
+      </div>
+      <div>
+        <label>Last Name:</label>
+        <p>{{ staff.lastName }}</p>
+      </div>
+
+      <div>
+        <label>Title:</label>
+        <p>{{ staff.title }}</p>
+      </div>
+      <div>
+        <label>Civil Code:</label>
+        <p>{{ getCivilCode(staff.cvlCode) }}</p>
+      </div>
+      <div>
+        <label>Department Code:</label>
+        <p>{{ getDepartmentName(staff.dptCode) }}</p>
+      </div>
+
+    <div class="actions">
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>

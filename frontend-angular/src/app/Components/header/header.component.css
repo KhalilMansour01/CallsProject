@@ -1,0 +1,44 @@
+nav.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+body {
+  padding-top: 56px;
+}
+
+.navbar-collapse {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.navbar-nav.mx-auto {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-brand{
+  color: white !important;
+}
+
+.navbar-nav .nav-link {
+  color: white !important;
+  cursor: pointer;
+}
+
+.navbar-nav .nav-link i {
+  color: white !important;
+}
+
+.navbar-nav .nav-link i {
+  margin-right: 5px;
+}
+
+.navbar-custom {
+  background-color:   #22303f; /* Your desired color */
+}

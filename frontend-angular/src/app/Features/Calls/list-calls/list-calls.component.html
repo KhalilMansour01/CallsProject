@@ -1,0 +1,81 @@
+<div class="container">
+  <h2 class="page-title">Calls Dashboard</h2>
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search Calls"
+      [(ngModel)]="searchQuery"
+      
+      (input)="onSearch()"
+    />
+  </div>
+
+  <div class="filter-row">
+    <!-- Filter Options on the Left -->
+    <div class="filter-options">
+      <!-- Category Filter -->
+      <div class="filter-item">
+        <label for="categoryFilter" class="filter-label">Category:</label>
+        <select id="categoryFilter" [(ngModel)]="selectedCategory" (change)="applyCategoryFilter($event.target.value)">
+          <option *ngFor="let key of categoryKeys" [value]="key">{{ categoryMap[key] }}</option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item">
+        <label for="statusFilter" class="filter-label">Status:</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="applyStatusFilter($event.target.value)">
+          <option *ngFor="let key of statusKeys" [value]="key">{{ statusMap[key] }}</option>
+        </select>
+      </div>
+
+      <!-- Clear Filters Button -->
+      <button (click)="clearFilters()" class="btn btn-clear">Clear Filters</button>
+
+    </div>
+    <!-- Add Call Button on the Right -->
+    <button (click)="addCall()" class="btn btn-add">Add Call</button>
+  </div>
+  
+  <table class="call-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Client ID</th>
+        <th>Staff ID</th>
+        <th>Category</th>
+
+        <th>Request Date</th>
+        <th>Request Time</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let call of callsList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
+        <td>{{ call.id }}</td>
+        <td>{{ call.ccode }}</td>
+        <td>{{ call.ecode }}</td>
+        <td>{{ call.fcat }}</td>
+
+        <td>{{ call.reqDate | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ call.reqTime }}</td>
+        <td>{{ call.open ? 'Open' : 'Closed' }}</td>
+        <td>
+          <div class="actions">
+
+            <!-- <button (click)="followupCall(call)" class="btn-action" title="Follow Up">
+              <i class="fas fa-edit"></i>
+            </button> -->
+            <button (click)="viewCall(call)" class="btn-action" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button (click)="confirmDelete(call.id)" class="btn-action" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

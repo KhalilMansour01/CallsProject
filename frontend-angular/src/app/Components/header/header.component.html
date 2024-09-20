@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand navbar-custom">
+  <div class="container">
+    <!-- Left-aligned brand -->
+    <a class="navbar-brand" routerLink="/admin-dashboard">
+      Calls System
+    </a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto">
+        <!-- Center-aligned navigation items -->
+        <li class="nav-item" *ngIf="isAuthenticated()">
+          <a class="nav-link" routerLink="/calls/list">
+            <i class="fas fa-database"></i> Calls
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated()">
+          <a class="nav-link" routerLink="/staff/list">
+            <i class="fas fa-user-cog"></i> Staff
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated()">
+          <a class="nav-link" routerLink="/clients/list">
+            <i class="fas fa-address-book"></i> Clients
+          </a>
+        </li>
+      </ul>
+      <!-- Right-aligned logout button -->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" *ngIf="isAuthenticated()">
+          <a class="nav-link" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

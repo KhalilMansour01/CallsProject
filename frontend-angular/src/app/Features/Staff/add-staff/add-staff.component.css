@@ -1,0 +1,76 @@
+.staff-form {
+    width: 35%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    margin-top: 2%;
+
+  }
+  
+  .staff-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .staff-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .staff-form form div {
+    margin-bottom: 15px;
+  }
+  
+  .staff-form form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .staff-form form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .staff-form button {
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    align-self: center;
+  }
+  
+  .staff-form button:hover {
+    background-color: #3986d4;
+  }
+  
+  .alert {
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Adjust the gap between the buttons */
+  }

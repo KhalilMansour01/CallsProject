@@ -1,0 +1,104 @@
+<div class="client-form">
+  <h2>Edit Client</h2>
+  <form (ngSubmit)="onSubmit()" #clientForm="ngForm">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id">ID:</label>
+        <input type="text" id="id" [value]="client.id" disabled />
+      </div>
+      <div class="form-group">
+        <label for="cvlCode">Civil Code:</label>
+        <select id="cvlCode" required [(ngModel)]="client.cvlCode" name="cvlCode">
+          <option value="1">1: Mr.</option>
+          <option value="2">2: Mrs.</option>
+          <option value="3">3: Dr.</option>
+          <option value="4">4: None</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="custName">Client Name:</label>
+      <input type="text" id="custName" required [(ngModel)]="client.custName" name="custName" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cntrCode">Country:</label>
+        <select id="cntrCode" required [(ngModel)]="client.cntrCode" name="cntrCode">
+          <option *ngFor="let key of countryKeys" [value]="key">{{ key }}: {{ countryMap[key] }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="regCode">Region:</label>
+        <select id="regCode" required [(ngModel)]="client.regCode" name="regCode">
+          <option *ngFor="let key of regionKeys" [value]="key">{{ key }}: {{ regionMap[key] }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address1">Address 1:</label>
+      <input type="text" id="address1" required [(ngModel)]="client.address1" name="address1" />
+    </div>
+    <div class="form-group">
+      <label for="address2">Address 2:</label>
+      <input type="text" id="address2" [(ngModel)]="client.address2" name="address2" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tel1">Telephone 1:</label>
+        <input type="tel" id="tel1" required [(ngModel)]="client.tel1" name="tel1" />
+      </div>
+      <div class="form-group">
+        <label for="tel2">Telephone 2:</label>
+        <input type="tel" id="tel2" [(ngModel)]="client.tel2" name="tel2" />
+      </div>
+      <div class="form-group">
+        <label for="tel3">Telephone 3:</label>
+        <input type="tel" id="tel3" [(ngModel)]="client.tel3" name="tel3" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fax">Fax:</label>
+        <input type="text" id="fax" [(ngModel)]="client.fax" name="fax" />
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" [(ngModel)]="client.email" name="email" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="contact">Contact:</label>
+      <input type="text" id="contact" [(ngModel)]="client.contact" name="contact" />
+    </div>
+
+    <div class="form-row form-check">
+      <div class="checkbox">
+        <label for="vatStatus">VAT Status:</label>
+        <input type="checkbox" id="vatStatus" [(ngModel)]="client.vatStatus" name="vatStatus" />
+      </div>
+      <div class="checkbox">
+        <label for="vatCash">VAT Cash:</label>
+        <input type="checkbox" id="vatCash" [(ngModel)]="client.vatCash" name="vatCash" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+    </div>
+  </form>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>

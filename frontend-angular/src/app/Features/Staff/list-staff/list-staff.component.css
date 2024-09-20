@@ -1,0 +1,136 @@
+.container,
+.staff-container,
+main {
+  padding: 10px;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+  padding: 5 20px;
+}
+
+.search-input {
+  width: 100%;
+  /* Make the input take the full width of its container */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/*** BUTTONS ***/
+.btn {
+  padding: 5 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-add {
+  background-color: #63c76a;
+  color: white;
+}
+
+.btn-add:hover {
+  background-color: #4f9c54;
+}
+
+.btn-clear {
+  background-color: #2c3e50;
+  color: rgb(255, 255, 255);
+
+}
+
+.btn-clear:hover {
+  background-color: #4f7192;
+}
+
+/*** FILTERS ***/
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filter-label {
+  font-size: 16px;
+  /* Adjust as needed */
+  margin-right: 10px;
+  /* Space between label and select */
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-options select {
+  padding: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.filter-options select:hover {
+  background-color: #e9e6e6;
+  transition: background 0.3s ease;
+}
+
+
+
+/* TABLE */
+.staff-table-container {
+  flex: 1;
+}
+
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.striped {
+  background-color: #f9f9f9;
+}
+
+.staff-table th {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.staff-table td button {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.staff-table td button:hover {
+  background-color: #3986d4;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+}

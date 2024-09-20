@@ -1,0 +1,13 @@
+.container {
+  padding: 20px;
+}
+
+.welcome-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* #chart {
+  max-width: 100%;
+  height: auto;
+} */

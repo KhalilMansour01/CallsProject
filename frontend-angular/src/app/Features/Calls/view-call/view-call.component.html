@@ -1,0 +1,107 @@
+<div class="call-form">
+  
+  <div *ngIf="call">
+    <h2>Call Details: {{ call.id }}</h2>
+    <div class="form-row">
+      <div class="form-row">
+        <label>ID:</label>
+        <p>{{ call.id }}</p>
+      </div>
+      <!-- Display Client ID and Name -->
+      <div class="form-row">
+        <label>Client:</label>
+        <p>{{ client.id }}: {{ client.custName }}</p>
+      </div>
+
+      <!-- Display Staff ID and Full Name -->
+      <div class="form-row">
+        <label>Staff:</label>
+        <p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
+      </div>
+      <div class="form-row">
+        <label>Category:</label>
+        <p>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row">
+        <label>Request Date:</label>
+        <p>{{ call.reqDate | date: 'dd/MM/yyyy' }}</p>
+      </div>
+      <div class="form-row">
+        <label>Request Time:</label>
+        <p>{{ call.reqTime }}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row">
+        <label>Response Date:</label>
+        <p>{{ call.respDate | date: 'dd/MM/yyyy' }}</p>
+      </div>
+      <div class="form-row">
+        <label>Response Time:</label>
+        <p>{{ call.respTime }}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row">
+        <label>Time Arrived:</label>
+        <p>{{ call.timeArrive }}</p>
+      </div>
+      <div class="form-row">
+        <label>Time Left:</label>
+        <p>{{ call.timeLeft }}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Remark 1:</label>
+      <p>{{ call.rem1 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 2:</label>
+      <p>{{ call.rem2 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 3:</label>
+      <p>{{ call.rem3 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 4:</label>
+      <p>{{ call.rem4 }}</p>
+    </div>
+
+    <div class="form-row">
+      <label>Action Remark 1:</label>
+      <p>{{ call.actRem1 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Action Remark 2:</label>
+      <p>{{ call.actRem2 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Action Remark 3:</label>
+      <p>{{ call.actRem3 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Action Remark 4:</label>
+      <p>{{ call.actRem4 }}</p>
+    </div>
+
+    <div class="actions">
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button (click)="followUpCall()" class="btn btn-secondary">Follow Up</button>
+      <!-- <button (click)="printCallDetails()" class="btn btn-secondary">Print</button> -->
+    </div>
+
+
+
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>

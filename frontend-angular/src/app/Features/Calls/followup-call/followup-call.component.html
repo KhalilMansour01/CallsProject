@@ -1,0 +1,109 @@
+<div class="call-form">
+
+  <div *ngIf="call">
+    <h2>Follow-Up Call: {{ call.id }}</h2>
+    <!-- Existing Call Information Display -->
+    <div class="form-row">
+      <div class="form-row">
+        <label>ID:</label>
+        <p>{{ call.id }}</p>
+      </div>
+      <!-- Display Client ID and Name -->
+      <div class="form-row">
+        <label>Client:</label>
+        <p>{{ client.id }}: {{ client.custName }}</p>
+      </div>
+
+      <!-- Display Staff ID and Full Name -->
+      <div class="form-row">
+        <label>Staff:</label>
+        <p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
+      </div>
+
+      <div class="form-row">
+        <label>Category:</label>
+        <p>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</p>
+      </div>
+    </div>
+
+    <!-- Dates and Times Display -->
+    <div class="form-row">
+      <div class="form-row">
+        <label>Request Date:</label>
+        <p>{{ call.reqDate | date: 'dd/MM/yyyy' }}</p>
+      </div>
+      <div class="form-row">
+        <label>Request Time:</label>
+        <p>{{ call.reqTime }}</p>
+      </div>
+    </div>
+
+    <!-- Editable Follow-Up Form -->
+    <div class="form-row">
+      <div class="date-time">
+        <label>Response Date:</label>
+        <input type="date" [(ngModel)]="call.respDate" name="respDate" required />
+      </div>
+      <div class="date-time">
+        <label>Response Time:</label>
+        <input type="time" [(ngModel)]="call.respTime" name="respTime" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="date-time">
+        <label class="date-time">Time Arrived:</label>
+        <input type="time" [(ngModel)]="call.timeArrive" name="timeArrive" required />
+      </div>
+      <div class="date-time">
+        <label>Time Left:</label>
+        <input type="time" [(ngModel)]="call.timeLeft" name="timeLeft" required />
+      </div>
+    </div>
+
+    <!-- Remarks -->
+    <div class="form-row">
+      <label>Remark 1:</label>
+      <p>{{ call.rem1 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 2:</label>
+      <p>{{ call.rem2 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 3:</label>
+      <p>{{ call.rem3 }}</p>
+    </div>
+    <div class="form-row">
+      <label>Remark 4:</label>
+      <p>{{ call.rem4 }}</p>
+    </div>
+
+    <div class="form-row">
+      <label>New Remark 1:</label>
+      <input type="text" [(ngModel)]="call.actRem1" name="actRem1" />
+    </div>
+    <div class="form-row">
+      <label>New Remark 2:</label>
+      <input type="text" [(ngModel)]="call.actRem2" name="actRem2" />
+    </div>
+    <div class="form-row">
+      <label>New Remark 3:</label>
+      <input type="text" [(ngModel)]="call.actRem3" name="actRem3" />
+    </div>
+    <div class="form-row">
+      <label>New Remark 4:</label>
+      <input type="text" [(ngModel)]="call.actRem4" name="actRem4" />
+    </div>
+
+    <div class="actions">
+
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button (click)="updateCall()" class="btn btn-secondary">Save & Print</button>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>
