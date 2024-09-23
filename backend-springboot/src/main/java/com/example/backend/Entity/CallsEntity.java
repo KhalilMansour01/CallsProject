@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.*;
 import java.util.Date;
 
+import jakarta.validation.constraints.NotNull;
+
 @Entity
 @Table(name = "calls")
 public class CallsEntity {
@@ -13,16 +15,18 @@ public class CallsEntity {
     @Column(name = "call_no")
     private BigDecimal id;
 
+    
     @Column(name = "c_code", nullable = false)
+    @NotNull(message = "Client Id required")
     private BigDecimal cCode;
 
-    @Column(name = "e_code")
+    @Column(name = "e_code", nullable = false)
     private BigDecimal eCode;
 
-    @Column(name = "req_date")
+    @Column(name = "req_date", nullable = false)
     private Date reqDate;
 
-    @Column(name = " req_time")
+    @Column(name = " req_time", nullable = false)
     private LocalTime reqTime;
 
     @Column(name = "rp_code")

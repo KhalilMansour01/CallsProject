@@ -99,7 +99,6 @@ export class ListClientsComponent implements OnInit {
   }
 
   addClient() {
-    // Logic to add a new client
     console.log('Add Client button clicked');
     this.router.navigate(['/clients/add']);
   }

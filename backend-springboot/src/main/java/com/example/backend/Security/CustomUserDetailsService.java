@@ -11,7 +11,7 @@ import com.example.backend.Repository.AdminRepository;
 import com.example.backend.Entity.AdminEntity;
 
 import java.util.Optional;
-import java.util.Arrays;
+// import java.util.Arrays;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             var user = admin.get();
             String[] roles = getRoles(user);
             // Debug log to check roles
-            System.out.println("Roles assigned: " + Arrays.toString(roles));
+            // System.out.println("Roles assigned: " + Arrays.toString(roles));
             return User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,32 +11,32 @@ export class StaffService {
 
   constructor(private http: HttpClient) { }
 
+  // Get all staff
   getStaff(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/all`);
   }
 
+  // Get staff by id
   getStaffById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
+  // Add staff
   addStaff(staff: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, staff)
-      .pipe(
-        catchError(error => {
-          return throwError(error);
-        })
-      );
+    return this.http.post(`${this.apiUrl}/create`, staff);
   }
 
+  // Update staff
   updateStaff(staff: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/update/${staff.id}`, staff);
   }
 
+  // Delete staff
   deleteStaff(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete/${id}`);
   }
 
-   // Call the department filter API
+  // Filter staff by department
   filterByDepartment(dptCode: string): Observable<any[]> {
     let params = new HttpParams();
     if (dptCode) {
@@ -47,7 +45,7 @@ export class StaffService {
     return this.http.get<any[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  // Call the search API
+  // Search staff by query
   searchStaff(searchQuery?: string): Observable<any[]> {
     let params = new HttpParams();
     if (searchQuery) {
@@ -55,5 +53,4 @@ export class StaffService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/search`, { params });
   }
-  
 }

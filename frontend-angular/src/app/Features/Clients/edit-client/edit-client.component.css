@@ -41,7 +41,6 @@
   font-size: 14px;
 }
 
-/* Flexbox layout for rows */
 .form-row {
   display: flex;
   justify-content: space-between;
@@ -58,7 +57,6 @@
   margin-right: 0;
 }
 
-/* Styling for checkboxes */
 .form-check {
   display: flex;
   gap: 15px;

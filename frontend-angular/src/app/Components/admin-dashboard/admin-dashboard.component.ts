@@ -17,7 +17,6 @@ export class AdminDashboardComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAdmin();
-        // this.initChart();
     }
 
     loadAdmin(): void {
@@ -34,30 +33,4 @@ export class AdminDashboardComponent implements OnInit {
             });
         }
     }
-
-    // initChart(): void {
-    //     const ctx = document.getElementById('chart') as HTMLCanvasElement;
-
-    //     new Chart(ctx, {
-    //         type: 'bar', // You can change this to 'line', 'pie', etc.
-    //         data: {
-    //             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    //             datasets: [{
-    //                 label: 'Calls',
-    //                 data: [12, 19, 3, 5, 2, 3, 7], // Dummy data
-    //                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-    //                 borderColor: 'rgba(75, 192, 192, 1)',
-    //                 borderWidth: 1
-    //             }]
-    //         },
-    //         options: {
-    //             responsive: true,
-    //             scales: {
-    //                 y: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
 }

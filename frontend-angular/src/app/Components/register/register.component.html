@@ -1,58 +1,56 @@
-<!-- Register Form -->
 <div class="register-form">
-    <h2>Register</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Form Fields -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" id="username" formControlName="username" />
-          <div *ngIf="username?.hasError('usernameTaken')" class="error">Username is already taken</div>
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" formControlName="email" />
-        </div>
+  <h2>Register</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" formControlName="username" />
+        <div *ngIf="username?.hasError('usernameTaken')" class="error">Username is already taken</div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" id="password" formControlName="password" />
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password:</label>
-          <input type="password" id="confirmPassword" formControlName="confirmPassword" />
-          <div *ngIf="registerForm.hasError('passwordsMismatch')" class="error">Passwords do not match</div>
-        </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" />
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName">First Name:</label>
-          <input type="text" id="firstName" formControlName="firstName" />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name:</label>
-          <input type="text" id="lastName" formControlName="lastName" />
-        </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" formControlName="password" />
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="telephone">Phone Number:</label>
-          <input type="text" id="telephone" formControlName="telephone" />
-        </div>
-        <div class="form-group">
-          <label for="role">Role:</label>
-          <select id="role" formControlName="role">
-            <option value="ADMIN">ADMIN</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+        <div *ngIf="registerForm.hasError('passwordsMismatch')" class="error">Passwords do not match</div>
       </div>
-      <!-- Button Container -->
-      <div class="button-container">
-        <button type="submit" [disabled]="registerForm.invalid" class="register-button">Register</button>
-        <a class="login-button" routerLink="/login">Login</a>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" formControlName="firstName" />
       </div>
-      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    </form>
-  </div>
-  
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" formControlName="lastName" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="telephone">Phone Number:</label>
+        <input type="text" id="telephone" formControlName="telephone" />
+      </div>
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" formControlName="role">
+          <option value="ADMIN">ADMIN</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" [disabled]="registerForm.invalid" class="register-button">Register</button>
+      <a class="login-button" routerLink="/login">Login</a>
+    </div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  </form>
+</div>

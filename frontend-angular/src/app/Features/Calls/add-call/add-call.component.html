@@ -20,7 +20,7 @@
     <div class="form-row">
       <div class="form-row">
         <label for="ccode">Client ID:</label>
-        <select id="ccode" required [(ngModel)]="call.ccode" name="ccode">
+        <select id="ccode" required [(ngModel)]="call.ccode" name="ccode" (change)="onClientSelect(call.ccode)">
           <option *ngFor="let client of clientsList" [value]="client.id">
             {{ client.id }}: {{ client.custName }}
           </option>
@@ -28,7 +28,7 @@
       </div>
       <div class="form-row">
         <label for="ecode">Staff ID:</label>
-        <select id="ecode" required [(ngModel)]="call.ecode" name="ecode">
+        <select id="ecode" required [(ngModel)]="call.ecode" name="ecode" (change)="onStaffSelect(call.ecode)">
           <option *ngFor="let staff of staffList" [value]="staff.id">
             {{ staff.id }} - {{ staff.firstName }} {{ staff.lastName }}
           </option>
@@ -46,6 +46,7 @@
         <input type="time" id="reqTime" required [(ngModel)]="call.reqTime" name="reqTime" #reqTime="ngModel" />
       </div>
     </div>
+    
 
 
 
@@ -72,31 +73,16 @@
     <div class="actions">
       <button (click)="goBack()" class="btn btn-secondary">Back</button>
       <button type="submit" class="btn btn-secondary">Add & Print</button>
-      <button (click)="preparePrintSection()" class="btn btn-secondary">Print</button>
     </div>
 
   </form>
 
-  <!-- Success and fail message alert -->
   <div *ngIf="successMessage" class="alert alert-success">
     {{ successMessage }}
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+  <div *ngIf="errorMessage && errorMessage.length > 0" class="alert alert-danger">
+    <ul>
+      <li *ngFor="let message of errorMessage">{{ message }}</li>
+    </ul>
   </div>
-</div>
-
-<div id="print-section" class="print-template">
-  <!-- <h1>Call Report</h1> -->
-  <p>Call ID: {{ call.id }}</p>
-  <p>Category: {{ call.fcat }}</p>
-  <p>Client ID: {{ call.ccode }}</p>
-  <p>Staff ID: {{ call.ecode }}</p>
-  <p>Request Date: {{ call.reqDate }}</p>
-  <p>Request Time: {{ call.reqTime }}</p>
-  <p>Remark 1: {{ call.rem1 }}</p>
-  <p>Remark 2: {{ call.rem2 }}</p>
-  <p>Remark 3: {{ call.rem3 }}</p>
-  <p>Remark 4: {{ call.rem4 }}</p>
-  
 </div>

@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],  // Add this line
+      confirmPassword: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -29,7 +29,6 @@ export class RegisterComponent implements OnInit {
       role: ['ADMIN', Validators.required]
     }, { validator: this.passwordsMatchValidator });
 
-    // Error handling for form validation
     this.registerForm.valueChanges.subscribe(() => {
       this.errorMessage = '';
     });

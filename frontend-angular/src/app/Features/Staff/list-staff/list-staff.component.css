@@ -15,7 +15,6 @@ main {
 
 .search-input {
   width: 100%;
-  /* Make the input take the full width of its container */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -61,9 +60,7 @@ main {
 
 .filter-label {
   font-size: 16px;
-  /* Adjust as needed */
   margin-right: 10px;
-  /* Space between label and select */
 }
 
 .filter-options {

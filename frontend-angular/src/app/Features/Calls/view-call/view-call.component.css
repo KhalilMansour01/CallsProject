@@ -37,7 +37,7 @@
 }
 .call-form .form-row p {
     margin: 0;
-    word-wrap: break-word; /* Handle long text properly */
+    word-wrap: break-word;
 }
 
 
@@ -77,7 +77,7 @@
 }
 
 
-
+/* Print Format */
 @media print {
     header,
     .navbar,

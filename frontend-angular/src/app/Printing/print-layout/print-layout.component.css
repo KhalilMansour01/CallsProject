@@ -1,0 +1,53 @@
+.print-container {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.call-table,
+.manual-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  border: 2px double black;
+}
+
+.call-table th,
+.call-table td,
+.manual-table th,
+.manual-table td {
+  padding: 10px;
+  border-bottom: 1px solid black;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.call-table th,
+.manual-table th {
+  width: 150px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+h4 {
+  margin-top: 15px;
+  margin-left: 10px;
+  font-size: 18px;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.field {
+  width: 48%;
+  white-space: nowrap;
+}
+

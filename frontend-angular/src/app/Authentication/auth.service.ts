@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { jwtDecode } from "jwt-decode";
 import { Admin } from './admin.model';
-// import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +13,6 @@ export class AuthService {
   private BASE_URL = 'http://localhost:8080/admin';
 
   constructor(private http: HttpClient) { }
-
-
 
   //LOGIN and get token
   authenticateAndGetToken(username: string, password: string): Observable<any> {
@@ -33,7 +30,7 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-//CHECK IF USER IS AUTHENTICATED
+  //CHECK IF USER IS AUTHENTICATED
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   }
@@ -61,8 +58,7 @@ export class AuthService {
     return localStorage.getItem('role') === 'ROLE_ADMIN';
   }
 
-
-
+  //CHECK IF TOKEN IS EXPIRED
   isTokenExpired(token: string): boolean {
     try {
       const decoded: any = jwtDecode(token);

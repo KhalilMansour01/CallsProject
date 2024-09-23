@@ -99,10 +99,13 @@
     <div class="actions">
 
       <button (click)="goBack()" class="btn btn-secondary">Back</button>
-      <button (click)="updateCall()" class="btn btn-secondary">Save & Print</button>
+      <button (click)="updateCall()" class="btn btn-secondary">Save</button>
     </div>
   </div>
 
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>

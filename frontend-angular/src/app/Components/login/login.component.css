@@ -72,7 +72,6 @@
 
    .register-button {
    	background-color: #6c757d;
-   	/* Grey background */
    	color: white;
    	text-decoration: none;
    	display: inline-block;
@@ -81,7 +80,6 @@
 
    .register-button:hover {
    	background-color: #5a6268;
-   	/* Darker grey on hover */
    }
 
    .error {

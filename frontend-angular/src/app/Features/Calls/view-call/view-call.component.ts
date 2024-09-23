@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CallsService } from 'src/app/Services/calls.service';
 import { ClientsService } from 'src/app/Services/clients.service';
 import { StaffService } from 'src/app/Services/staff.service';
+import { PrintService } from 'src/app/Printing/print.service';
 
 @Component({
   selector: 'app-view-call',
@@ -10,7 +11,7 @@ import { StaffService } from 'src/app/Services/staff.service';
   styleUrls: ['./view-call.component.css']
 })
 export class ViewCallComponent implements OnInit {
-  
+
   call: any = {};
   client: any = {};
   staff: any = {};
@@ -23,6 +24,7 @@ export class ViewCallComponent implements OnInit {
     private callsService: CallsService,
     private clientsService: ClientsService,
     private staffService: StaffService,
+    private printService: PrintService,
     private router: Router
   ) { }
 
@@ -56,7 +58,7 @@ export class ViewCallComponent implements OnInit {
       }
     });
   }
-  
+
   getStaffById(id: number): void {
     this.staffService.getStaffById(id).subscribe({
       next: (data) => {
@@ -78,5 +80,18 @@ export class ViewCallComponent implements OnInit {
 
   printCallDetails(): void {
     window.print();
+  }
+
+  printCall() {
+    this.printService.printDocument(
+      `Call ${this.call.id}`,
+      this.call,
+      this.staff,
+      this.client
+    );
+  }
+
+  isCallOpen(): boolean {
+    return this.call.open;
   }
 }

@@ -60,7 +60,7 @@ public class StaffService {
 
         boolean exists = staffRepository.existsById(entity.getId());
         if (exists) {
-            throw new DuplicateIdException("A staff record already exists for Id : " + entity.getId());
+            throw new DuplicateIdException("A staff record exists for Id : " + entity.getId());
         } else {
             StaffEntity savedEntity = staffRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);

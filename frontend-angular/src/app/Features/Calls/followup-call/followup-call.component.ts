@@ -79,7 +79,6 @@ export class FollowupCallComponent implements OnInit {
         this.errorMessage = error.message;
       }
     });
-    window.print();
   }
 
   goBack(): void {

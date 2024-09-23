@@ -86,21 +86,23 @@
   border: 1px solid #c3e6cb;
 }
 
+.alert-danger {
+  word-wrap: normal;
+}
+
 .actions {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
 
-/* General styles for the print template (hidden by default) */
-.print-template {
+/* .print-template {
   display: none;
-}
+} */
 
 /* Print-specific styles */
-@media print {
+/* @media print {
 
-  /* Hide everything but the print section */
   body * {
     visibility: hidden;
   }
@@ -125,7 +127,6 @@
     
   }
 
-  /* Styling for printed content */
   h1 {
     color: #2c3e50;
     text-align: center;
@@ -136,4 +137,4 @@
     font-size: 14px;
     margin: 10px 0;
   }
-}
+} */

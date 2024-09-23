@@ -40,7 +40,7 @@ export class ListStaffComponent implements OnInit {
 
   // Load staff based on current filters and search
   loadStaff(): void {
-    console.log('searchQuery:', this.searchQuery); // Debugging line`
+    console.log('searchQuery:', this.searchQuery);
     if (this.searchQuery) {
       this.staffService.searchStaff(this.searchQuery).subscribe(
         (data) => {

@@ -56,11 +56,13 @@
         <td>{{ call.id }}</td>
         <td>{{ call.ccode }}</td>
         <td>{{ call.ecode }}</td>
-        <td>{{ call.fcat }}</td>
+        <td>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</td>
 
         <td>{{ call.reqDate | date: 'yyyy-MM-dd' }}</td>
         <td>{{ call.reqTime }}</td>
-        <td>{{ call.open ? 'Open' : 'Closed' }}</td>
+        <td [ngClass]="{ 'status-open': call.open, 'status-closed': !call.open }">
+          {{ call.open ? 'Open' : 'Closed' }}
+        </td>
         <td>
           <div class="actions">
 

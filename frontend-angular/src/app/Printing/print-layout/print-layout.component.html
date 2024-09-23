@@ -1,0 +1,91 @@
+<div class="print-container">
+    <h1>Call Details</h1>
+  
+    <table class="call-table">
+      <tr>
+        <th>Call ID:</th>
+        <td>{{ callDetails.id }}</td>
+      </tr>
+  
+      <tr>
+        <th>Category:</th>
+        <td>{{ callDetails.fcat === 'HDW' ? 'Hardware' : callDetails.fcat === 'SOF' ? 'Software' : callDetails.fcat }}</td>
+      </tr>
+  
+      <tr>
+        <th>Client:</th>
+        <td>{{ callDetails.ccode }} : {{ clientDetails.custName }}</td>
+      </tr>
+  
+      <tr>
+        <th>Staff:</th>
+        <td>{{ callDetails.ecode }} : {{ staffDetails.firstName }} {{ staffDetails.lastName }}</td>
+      </tr>
+    </table>
+  
+    <table class="call-table">
+      <tr>
+        <th>Request Date:</th>
+        <td>{{ callDetails.reqDate | date: 'dd-MM-yyyy' }}</td>
+        <th>Request Time:</th>
+        <td>{{ callDetails.reqTime }}</td>
+      </tr>
+  
+      <tr>
+        <th>Response Date:</th>
+        <td>{{ callDetails.respDate}}</td>
+        <th>Response Time:</th>
+        <td>{{ callDetails.respTime}}</td>
+      </tr>
+  
+      <tr>
+        <th>Time Arrived:</th>
+        <td>{{ callDetails.timeArrive}}</td>
+        <th>Time Left:</th>
+        <td>{{ callDetails.timeLeft}}</td>
+      </tr>
+    </table>
+  
+    <table class="manual-table">
+      <h4>Remarks</h4>
+  
+      <tr>
+        <th>1:</th>
+        <td>{{ callDetails.rem1 }}</td>
+      </tr>
+  
+      <tr>
+        <th>2:</th>
+        <td>{{ callDetails.rem2 }}</td>
+      </tr>
+  
+      <tr>
+        <th>3:</th>
+        <td>{{ callDetails.rem3 }}</td>
+      </tr>
+  
+      <tr>
+        <th>4:</th>
+        <td>{{ callDetails.rem4 }}</td>
+      </tr>
+  
+      <h4>Additional Remarks</h4>
+      <tr>
+        <th>5:</th>
+        <td>{{ callDetails.actRem1 || ' ' }}</td>
+      </tr>
+      <tr>
+        <th>6:</th>
+        <td>{{ callDetails.actRem2 || ' ' }}</td>
+      </tr>
+      <tr>
+        <th>7:</th>
+        <td>{{ callDetails.actRem3 || ' ' }}</td>
+      </tr>
+      <tr>
+        <th>8:</th>
+        <td>{{ callDetails.actRem4 || ' ' }}</td>
+      </tr>
+    </table>
+  </div>
+  

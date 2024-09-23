@@ -5,10 +5,12 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.Entity.CallsEntity;
+import com.example.backend.Exceptions.DuplicateIdException;
 import com.example.backend.Exceptions.ResourceNotFoundException;
 import com.example.backend.Repository.CallsRepository;
 import com.example.backend.Specifications.CallsSpecification;
@@ -36,17 +38,42 @@ public class CallsService {
         return ResponseEntity.ok().body(calls);
     }
 
-    // CREATE CALLS
-    public ResponseEntity<CallsEntity> createCalls(CallsEntity callsEntity) throws ResourceNotFoundException {
-        boolean exists = callsRepository.existsById(callsEntity.getId());
-        if (exists) {
-            throw new ResourceNotFoundException("Calls record exists for given id :: " + callsEntity.getId());
-        } else {
-            callsRepository.save(callsEntity);
+        // CREATE CALLS
+        public ResponseEntity<CallsEntity> createCalls(CallsEntity callsEntity) throws ResourceNotFoundException, DuplicateIdException {
+            
+            StringBuilder errorMessages = new StringBuilder();
+            
+            if(callsEntity.getId() == null) {
+                errorMessages.append("Id is required \n");
+            }
+            if(callsEntity.getCCode() == null) {
+                errorMessages.append("Client Id is required \n");
+            }
+            if(callsEntity.getECode() == null) {
+                errorMessages.append("Staff Id is required \n");
+            }
+            if(callsEntity.getReqDate() == null) {
+                errorMessages.append("Request Date is required \n");
+            }
+            if(callsEntity.getReqTime() == null) {
+                errorMessages.append("Request Time is required \n");
+            }
+            
+            if (errorMessages.length() > 0) {
+                throw new ResourceNotFoundException(errorMessages.toString().trim());
+            }
 
-            return ResponseEntity.status(201).body(callsEntity);
+            boolean exists = callsRepository.existsById(callsEntity.getId());
+            
+            if (exists) {
+                throw new DuplicateIdException("Calls record exists for given id : " + callsEntity.getId());
+            } else {
+
+                CallsEntity savedEntity = callsRepository.save(callsEntity);
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
+            }
         }
-    }
 
     // UPDATE CALLS
     public ResponseEntity<CallsEntity> updateCalls(BigDecimal id, CallsEntity callsEntity)

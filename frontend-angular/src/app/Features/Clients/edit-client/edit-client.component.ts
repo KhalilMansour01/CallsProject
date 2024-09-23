@@ -102,8 +102,8 @@ export class EditClientComponent implements OnInit {
       this.client = {
         ...data,
         id: Number(data.id),
-        vatStatus: data.vatStatus === '1',  // Convert '1' to true, '0' to false
-      vatCash: data.vatCash === '1',      // Convert '1' to true, '0' to false
+        vatStatus: data.vatStatus === '1',
+        vatCash: data.vatCash === '1',
       };
     });
   }

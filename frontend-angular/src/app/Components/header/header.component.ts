@@ -18,11 +18,11 @@ export class HeaderComponent implements OnInit {
   }
 
   isAuthenticated(): boolean {
-    return this.authService.isAuthenticated(); // Adjust according to your auth service method
+    return this.authService.isAuthenticated();
   }
 
   logout(): void {
-    this.authService.logout(); // Clear the authentication state
-    this.router.navigate(['/login']); // Redirect to login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

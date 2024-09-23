@@ -15,7 +15,6 @@ main {
 
 .search-input {
   width: 100%;
-  /* Make the input take the full width of its container */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -24,7 +23,6 @@ main {
 }
 
 
-/* Filter Row */
 .filter-row {
   display: flex;
   justify-content: space-between;
@@ -32,20 +30,17 @@ main {
   margin-bottom: 15px;
 }
 
-/* Filter Options */
 .filter-options {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Filter Labels */
 .filter-label {
   font-size: 16px;
   margin-right: 10px;
 }
 
-/* Filter Selects */
 .filter-options select {
   padding: 5px;
   font-size: 16px;
@@ -128,4 +123,12 @@ main {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.status-open {
+  color: rgb(19, 218, 19);
+}
+
+.status-closed {
+  color: rgb(255, 0, 0);
 }
