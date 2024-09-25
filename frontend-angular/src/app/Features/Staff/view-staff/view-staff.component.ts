@@ -58,6 +58,10 @@ export class ViewStaffComponent implements OnInit {
     return this.departmentMap[code] || 'Unknown';
   }
 
+  editStaff(): void {
+    this.router.navigate([`/staff/edit/${this.staff.id}`]);
+  }
+
   goBack(): void {
     this.router.navigate(['/staff/list']);
   }

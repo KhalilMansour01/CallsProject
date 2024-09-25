@@ -81,6 +81,10 @@ export class ViewClientComponent implements OnInit {
     this.router.navigate(['/clients/list']);
   }
 
+  editClient() {
+    this.router.navigate([`/clients/edit/${this.client.id}`]);
+  }
+  
   printClientDetails() {
     window.print();
   }

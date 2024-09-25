@@ -47,6 +47,7 @@
 
         <th>Request Date</th>
         <th>Request Time</th>
+        <th>Remark</th>
         <th>Status</th>
         <th></th>
       </tr>
@@ -60,6 +61,7 @@
 
         <td>{{ call.reqDate | date: 'yyyy-MM-dd' }}</td>
         <td>{{ call.reqTime }}</td>
+        <td>{{ call.rem1 }}</td>
         <td [ngClass]="{ 'status-open': call.open, 'status-closed': !call.open }">
           {{ call.open ? 'Open' : 'Closed' }}
         </td>

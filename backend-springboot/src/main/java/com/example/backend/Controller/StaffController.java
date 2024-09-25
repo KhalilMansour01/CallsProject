@@ -75,4 +75,13 @@ public class StaffController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @GetMapping("/filterAndSearch")
+    public ResponseEntity<List<StaffEntity>> searchAndFilterStaff(
+        @RequestParam(required = false) String dptCode,
+        @RequestParam(required = false) String searchQuery) {
+        
+        List<StaffEntity> staff = staffService.filterAndSearchStaff(dptCode, searchQuery);
+        return ResponseEntity.ok(staff);
+    }
 }

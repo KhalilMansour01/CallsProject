@@ -37,21 +37,10 @@ export class ListStaffComponent implements OnInit {
     this.loadStaff();
   }
 
-
-  // Load staff based on current filters and search
   loadStaff(): void {
-    console.log('searchQuery:', this.searchQuery);
-    if (this.searchQuery) {
-      this.staffService.searchStaff(this.searchQuery).subscribe(
-        (data) => {
-          this.staffList = data;
-        },
-        (error) => {
-          console.error('Error fetching staff data:', error);
-        }
-      );
-    } else if (this.selectedDepartment) {
-      this.staffService.filterByDepartment(this.selectedDepartment).subscribe(
+
+    if (this.searchQuery || this.selectedDepartment) {
+      this.staffService.filterAndSearchStaff(this.selectedDepartment, this.searchQuery).subscribe(
         (data) => {
           this.staffList = data;
         },
@@ -72,12 +61,10 @@ export class ListStaffComponent implements OnInit {
   }
 
   addStaff() {
-    console.log('Add Staff button clicked');
     this.router.navigate(['/staff/add']);
   }
 
   editStaff(staff: any) {
-    console.log('Edit button clicked for staff ID:', staff.id);
     if (staff.id) {
       this.router.navigate([`/staff/edit/${staff.id}`]);
     } else {
@@ -86,14 +73,13 @@ export class ListStaffComponent implements OnInit {
   }
 
   viewStaff(staff: any) {
-    console.log('View button clicked for staff ID:', staff.id);
     if (staff.id) {
       this.router.navigate([`/staff/view/${staff.id}`]);
     } else {
       console.error('Staff ID is undefined');
     }
   }
-  
+
   confirmDelete(staffId: number) {
     const confirmation = confirm('Are you sure you want to delete this staff record?');
     if (confirmation) {
@@ -133,25 +119,19 @@ export class ListStaffComponent implements OnInit {
   }
 
   applyFilters(departmentCode: string): void {
+    console.log('selectedDepartment:', this.selectedDepartment);
     this.selectedDepartment = departmentCode === '' ? '' : departmentCode;
-    console.log('Selected Department:', this.selectedDepartment); // Debug
     this.loadStaff();
   }
 
   clearFilters(): void {
-    this.selectedDepartment = ''; // Reset to empty string to select "All Departments"
-    this.loadStaff(); // Reload staff without filters
+    this.selectedDepartment = '';
+    this.loadStaff();
   }
 
   onSearch(): void {
-    if (this.searchQuery) {
-      this.selectedDepartment = ''; // Reset department filter
-      this.loadStaff(); // Reload staff without search query
-    } else {
-      this.loadStaff();
-    }
+    console.log('searchQuery:', this.searchQuery);
+    this.loadStaff();
   }
-
-  
 
 }

@@ -25,4 +25,10 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  // toAdminDashboard(): void {
+  //   if(this.isAuthenticated()){
+  //     this.router.navigate(['/admin-dashboard']);
+  //   }
+  // }
 }

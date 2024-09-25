@@ -53,4 +53,16 @@ export class StaffService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/search`, { params });
   }
+
+  // Filter and search staff 
+  filterAndSearchStaff(dptCode?: string, searchQuery?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (dptCode) {
+      params = params.set('dptCode', dptCode);
+    }
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
+  }
 }

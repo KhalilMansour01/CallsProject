@@ -109,7 +109,7 @@ export class EditClientComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/clients/list']);
+    this.router.navigate([`/clients/view/${this.client.id}`]);
   }
 
 }

@@ -37,7 +37,6 @@ export class FollowupCallComponent implements OnInit {
     this.callsService.getCallById(id).subscribe({
       next: (data) => {
         this.call = data;
-        this.successMessage = 'Call details retrieved successfully';
         this.getClientById(data.ccode);
         this.getStaffById(data.ecode);
       },
@@ -75,8 +74,14 @@ export class FollowupCallComponent implements OnInit {
       next: () => {
         this.successMessage = 'Call updated successfully';
       },
-      error: (error: any) => {
-        this.errorMessage = error.message;
+      error: (err: any) => {
+        if (err.error && err.error.message) {
+          this.errorMessage = err.error.message.split('\n');
+        } else if (err.status === 0) {
+          this.errorMessage = 'Could not connect to the server. Please try again later.';
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again.';
+        }
       }
     });
   }

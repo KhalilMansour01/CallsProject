@@ -56,4 +56,19 @@ export class CallsService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/search`, { params });
   }
+
+  // Filter and search calls 
+  filterAndSearchCalls(open?: string, fCat?: string, searchQuery?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (fCat) {
+      params = params.set('fCat', fCat);
+    }
+    if (open) {
+      params = params.set('open', open);
+    }
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
+  }
 }

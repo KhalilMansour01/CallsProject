@@ -74,4 +74,14 @@ public class CustomerController {
         List<CustomerEntity> customers = customerService.searchCustomers(searchQuery);
         return ResponseEntity.ok(customers);
     }
+
+    @GetMapping("/filterAndSearch")
+    public ResponseEntity<List<CustomerEntity>> searchAndFilterCustomer(
+            @RequestParam(required = false) String regCode,
+            @RequestParam(required = false) String cntrCode,
+            @RequestParam(required = false) String searchQuery) {
+
+        List<CustomerEntity> customers = customerService.filterAndSearchCustomers(regCode, cntrCode, searchQuery);
+        return ResponseEntity.ok(customers);
+    }
 }

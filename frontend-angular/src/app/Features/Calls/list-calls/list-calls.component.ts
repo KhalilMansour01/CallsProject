@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 export class ListCallsComponent implements OnInit {
 
   callsList: any[] = [];
-  // filteredCallsList: any[] = [];
 
   successMessage: string | null = null;
   errorMessage: string | null = null;
@@ -45,17 +44,14 @@ export class ListCallsComponent implements OnInit {
   }
 
   loadCalls(): void {
-    if (this.searchQuery) {
-      this.callsService.searchCalls(this.searchQuery).subscribe(
-        (data) => {
-          this.callsList = data;
-        },
-        (error) => {
-          console.error('Error fetching calls data:', error);
-        }
-      );
-    } else if (this.selectedCategory || this.selectedStatus) {
-      this.callsService.filterCalls(this.selectedStatus, this.selectedCategory).subscribe(
+    if (this.searchQuery || this.selectedCategory || this.selectedStatus) {
+
+      let statusFilter = this.selectedStatus ? this.selectedStatus : null;
+      this.callsService.filterAndSearchCalls(
+        statusFilter,
+        this.selectedCategory,
+        this.searchQuery
+      ).subscribe(
         (data) => {
           this.callsList = data;
         },
@@ -64,6 +60,12 @@ export class ListCallsComponent implements OnInit {
         }
       );
     } else {
+
+      console.log('NO FILTERS!!');
+
+      this.searchQuery = '';
+      this.selectedCategory = '';
+      this.selectedStatus = '';
       this.callsService.getCalls().subscribe(
         (data) => {
           this.callsList = data;
@@ -74,7 +76,7 @@ export class ListCallsComponent implements OnInit {
       );
     }
   }
-  
+
 
   addCall(): void {
     this.router.navigate(['/calls/add']);
@@ -85,8 +87,6 @@ export class ListCallsComponent implements OnInit {
   }
 
   followupCall(call: any) {
-    console.log('Following up on call:', call.id);
-
     if (call.id) {
       this.router.navigate([`/calls/followup/${call.id}`]);
     } else {
@@ -95,7 +95,6 @@ export class ListCallsComponent implements OnInit {
   }
 
   confirmDelete(callsId: number): void {
-
     const confirmDelete = confirm('Are you sure you want to delete this call record?');
     if (confirmDelete) {
       this.deleteCall(callsId);
@@ -117,32 +116,23 @@ export class ListCallsComponent implements OnInit {
   applyStatusFilter(status: string): void {
     console.log('Applying status filter:', status);
     this.selectedStatus = status;
-    // this.filteredCallsList = this.callsList.filter(call => call.status === status);
     this.loadCalls();
   }
 
   applyCategoryFilter(category: string): void {
     console.log('Applying category filter:', category);
     this.selectedCategory = category;
-    // this.filteredCallsList = this.callsList.filter(call => call.category === category);
-    this.loadCalls();
-  }
-
-  clearFilters(): void {
-    this.searchQuery = '';
-    this.selectedCategory = '';
-    this.selectedStatus = '';
-    // this.filteredCallsList = this.callsList;
     this.loadCalls();
   }
 
   onSearch(): void {
-    if (this.searchQuery) {
-      this.selectedCategory = '';
-      this.selectedStatus = '';
-      this.loadCalls();
-    } else {
-      this.loadCalls();
-    }
+    console.log('Search query:', this.searchQuery);
+    this.loadCalls();
+  }
+
+  clearFilters(): void {
+    this.selectedCategory = '';
+    this.selectedStatus = '';
+    this.loadCalls();
   }
 }

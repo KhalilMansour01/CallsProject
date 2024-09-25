@@ -1,5 +1,5 @@
 .call-form {
-    width: 60%;
+    width: 45%;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -19,7 +19,7 @@
 .call-form .form-row {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 

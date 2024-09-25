@@ -58,7 +58,7 @@ export class EditStaffComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/staff/list']);
+    this.router.navigate([`/staff/view/${this.staff.id}`]);
   }
 
 

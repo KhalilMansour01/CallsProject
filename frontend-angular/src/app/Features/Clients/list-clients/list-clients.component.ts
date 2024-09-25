@@ -13,7 +13,7 @@ export class ListClientsComponent implements OnInit {
 
   successMessage: string | null = null;
   errorMessage: string | null = null;
-  
+
   searchQuery: string = '';
 
   countryMap: { [key: string]: string } = {
@@ -68,17 +68,14 @@ export class ListClientsComponent implements OnInit {
   }
 
   loadClients(): void {
-    if (this.searchQuery) {
-      this.clientsService.searchClients(this.searchQuery).subscribe(
-        (data) => {
-          this.clientsList = data;
-        },
-        (error) => {
-          console.error('Error fetching customer data:', error);
-        }
-      );
-    } else if (this.selectedCountry || this.selectedRegion) {
-      this.clientsService.filterByRegionAndCountry(this.selectedRegion, this.selectedCountry).subscribe(
+    if (this.searchQuery || this.selectedCountry || this.selectedRegion) {
+      console.log('selectedCountry:', this.selectedCountry);
+
+      this.clientsService.filterAndSearchClients(
+        this.selectedRegion,
+        this.selectedCountry,
+        this.searchQuery
+      ).subscribe(
         (data) => {
           this.clientsList = data;
         },
@@ -99,12 +96,10 @@ export class ListClientsComponent implements OnInit {
   }
 
   addClient() {
-    console.log('Add Client button clicked');
     this.router.navigate(['/clients/add']);
   }
 
   editClient(client: any) {
-    console.log('Edit button clicked for client ID:', client.id);
     if (client.id) {
       this.router.navigate([`/clients/edit/${client.id}`]);
     } else {
@@ -161,10 +156,12 @@ export class ListClientsComponent implements OnInit {
   }
 
   applyRegionFilter(newRegion: string): void {
+    console.log('selectedRegion:', this.selectedRegion);
     this.selectedRegion = newRegion;
     this.loadClients();
   }
   applyCountryFilter(newCountry: string): void {
+    console.log('selectedCountry:', this.selectedCountry);
     this.selectedCountry = newCountry;
     this.loadClients();
   }
@@ -176,12 +173,7 @@ export class ListClientsComponent implements OnInit {
   }
 
   onSearch(): void {
-    if (this.searchQuery) {
-      this.selectedRegion = '';
-      this.selectedCountry = '';
-      this.loadClients();
-    } else {
-      this.loadClients();
-    }
+    console.log('searchQuery:', this.searchQuery);
+    this.loadClients();
   }
 }

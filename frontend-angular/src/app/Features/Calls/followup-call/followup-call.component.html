@@ -8,23 +8,28 @@
         <label>ID:</label>
         <p>{{ call.id }}</p>
       </div>
-      <!-- Display Client ID and Name -->
-      <div class="form-row">
-        <label>Client:</label>
-        <p>{{ client.id }}: {{ client.custName }}</p>
-      </div>
-
-      <!-- Display Staff ID and Full Name -->
-      <div class="form-row">
-        <label>Staff:</label>
-        <p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
-      </div>
-
+      
       <div class="form-row">
         <label>Category:</label>
         <p>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</p>
       </div>
     </div>
+
+    <!-- Display Client ID and Name -->
+     <div class="form-row">
+      <div class="form-row">
+        <label>Client:</label>
+        <p>{{ client.id }}: {{ client.custName }}</p>
+      </div>
+  
+      <!-- Display Staff ID and Full Name -->
+      <div class="form-row">
+        <label>Staff:</label>
+        <p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
+      </div>
+     </div>
+    
+
 
     <!-- Dates and Times Display -->
     <div class="form-row">
@@ -80,19 +85,19 @@
     </div>
 
     <div class="form-row">
-      <label>New Remark 1:</label>
+      <label>Act Remark 1:</label>
       <input type="text" [(ngModel)]="call.actRem1" name="actRem1" />
     </div>
     <div class="form-row">
-      <label>New Remark 2:</label>
+      <label>Act Remark 2:</label>
       <input type="text" [(ngModel)]="call.actRem2" name="actRem2" />
     </div>
     <div class="form-row">
-      <label>New Remark 3:</label>
+      <label>Act Remark 3:</label>
       <input type="text" [(ngModel)]="call.actRem3" name="actRem3" />
     </div>
     <div class="form-row">
-      <label>New Remark 4:</label>
+      <label>Act Remark 4:</label>
       <input type="text" [(ngModel)]="call.actRem4" name="actRem4" />
     </div>
 
@@ -106,7 +111,9 @@
   <div *ngIf="successMessage" class="alert alert-success">
     {{ successMessage }}
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+  <div *ngIf="errorMessage && errorMessage.length > 0" class="alert alert-danger">
+    <ul>
+      <li *ngFor="let message of errorMessage">{{ message }}</li>
+    </ul>
   </div>
 </div>

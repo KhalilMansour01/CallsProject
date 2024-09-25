@@ -1,7 +1,7 @@
 .staff-form {
     width: 35%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   }
   
   .staff-form form div {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
   }
   
   .staff-form form label {
@@ -33,7 +33,7 @@
   
   .staff-form form input {
     width: 100%;
-    padding: 8px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;

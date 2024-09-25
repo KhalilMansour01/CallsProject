@@ -128,4 +128,14 @@ public class CustomerService {
         return repository.findAll(spec);
     }
 
+    // FILTER AND SEARCH CUSTOMERS
+    public List<CustomerEntity> filterAndSearchCustomers(String regCode, String cntrCode, String searchQuery) {
+        Specification<CustomerEntity> spec = Specification
+                .where(CustomerSpecifications.hasRegion(regCode))
+                .and(CustomerSpecifications.hasCountry(cntrCode))
+                .and(CustomerSpecifications.searchByMultipleFields(searchQuery));
+
+        return repository.findAll(spec);
+    }
+
 }

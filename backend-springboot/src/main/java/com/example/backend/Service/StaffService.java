@@ -117,4 +117,12 @@ public class StaffService {
         return staffRepository.findAll(spec);
     }
 
+    // FILTER AND SEARCH STAFF
+    public List<StaffEntity> filterAndSearchStaff(String dptCode, String searchQuery) {
+        Specification<StaffEntity> spec = Specification
+                .where(StaffSpecifications.hasDepartment(dptCode))
+                .and(StaffSpecifications.searchByMultipleFields(searchQuery));
+
+        return staffRepository.findAll(spec);
+    }
 }

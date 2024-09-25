@@ -56,4 +56,19 @@ export class ClientsService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/search`, { params });
   }
+
+  // Filter and search clients
+  filterAndSearchClients(region?: string, country?: string, searchQuery?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (region) {
+      params = params.set('regCode', region);
+    }
+    if (country) {
+      params = params.set('cntrCode', country);
+    }
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
+  }
 }

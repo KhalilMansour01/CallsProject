@@ -60,7 +60,7 @@ public class CallsController {
     @GetMapping("/filter")
     public ResponseEntity<List<CallsEntity>> filterCalls(
             @RequestParam(required = false) String fCat,
-            @RequestParam(required = false) boolean open) {
+            @RequestParam(required = false) Boolean open) {
 
         List<CallsEntity> calls = callsService.filterCalls(fCat, open);
         return ResponseEntity.ok().body(calls);
@@ -71,6 +71,16 @@ public class CallsController {
             @RequestParam(required = false) String searchQuery) {
 
         List<CallsEntity> calls = callsService.searchCalls(searchQuery);
+        return ResponseEntity.ok().body(calls);
+    }
+
+    @GetMapping("/filterAndSearch")
+    public ResponseEntity<List<CallsEntity>> searchAndFilterCalls(
+            @RequestParam(required = false) String fCat,
+            @RequestParam(required = false) Boolean open,
+            @RequestParam(required = false) String searchQuery) {
+
+        List<CallsEntity> calls = callsService.filterAndSearchCalls(fCat, open, searchQuery);
         return ResponseEntity.ok().body(calls);
     }
 }
