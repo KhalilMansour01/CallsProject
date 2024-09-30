@@ -46,6 +46,9 @@ export class ViewClientComponent implements OnInit {
     'WTB': 'WEST BEIRUT'
   };
 
+  countryKeys: string[];
+  regionKeys: string[];
+
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
@@ -58,6 +61,9 @@ export class ViewClientComponent implements OnInit {
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id'); // Convert string to number
     this.getClientById(id);
+
+    this.countryKeys = Object.keys(this.countryMap);
+    this.regionKeys = Object.keys(this.regionMap);
   }
 
   getClientById(id: number): void {
@@ -68,6 +74,8 @@ export class ViewClientComponent implements OnInit {
           id: Number(data.id),
           cntrCodeName: this.countryMap[data.cntrCode] || 'Unknown',
           regCodeName: this.regionMap[data.regCode] || 'Unknown',
+          vatStatus: data.vatStatus === '1',
+          vatCash: data.vatCash === '1',
         };
       },
       error: (err: HttpErrorResponse) => {
@@ -77,16 +85,23 @@ export class ViewClientComponent implements OnInit {
     });
   }
 
-  goBack() { 
+  goBack() {
     this.router.navigate(['/clients/list']);
   }
 
   editClient() {
     this.router.navigate([`/clients/edit/${this.client.id}`]);
   }
-  
+
   printClientDetails() {
     window.print();
   }
-  
+
+  getCountryName(code: string): string {
+    return this.countryMap[code] || 'Unknown';
+  }
+
+  getRegionName(code: string): string {
+    return this.regionMap[code] || 'Unknown';
+  }
 }

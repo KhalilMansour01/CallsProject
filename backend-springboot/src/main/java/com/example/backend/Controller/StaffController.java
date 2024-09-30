@@ -45,6 +45,11 @@ public class StaffController {
         return staffService.createStaff(staff);
     }
 
+    @PostMapping("/create1")
+    public ResponseEntity<?> createStaff1(@RequestBody StaffEntity staff) throws ResourceNotFoundException {
+        return staffService.createStaff1(staff);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<StaffEntity> updateStaff(@PathVariable("id") BigDecimal id, @RequestBody StaffEntity staff)
             throws ResourceNotFoundException {

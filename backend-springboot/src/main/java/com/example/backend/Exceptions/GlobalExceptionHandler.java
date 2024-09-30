@@ -1,6 +1,7 @@
 package com.example.backend.Exceptions;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,5 +33,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<Map<String, String>> handleCustomValidationException(CustomValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getFieldErrors());
     }
 }

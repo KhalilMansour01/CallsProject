@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.example.backend.Entity.StaffEntity;
 import com.example.backend.Repository.StaffRepository;
 import com.example.backend.Specifications.StaffSpecifications;
+
+// import com.example.backend.Exceptions.CustomValidationException;
 import com.example.backend.Exceptions.DuplicateIdException;
 import com.example.backend.Exceptions.MissingValueException;
 import com.example.backend.Exceptions.ResourceNotFoundException;
@@ -40,31 +42,74 @@ public class StaffService {
     }
 
     // CREATE STAFF
-    public ResponseEntity<StaffEntity> createStaff(StaffEntity entity) {
+    public ResponseEntity<StaffEntity> createStaff(StaffEntity entity)
+            throws DuplicateIdException {
 
-        StringBuilder errorMessages = new StringBuilder();
+        StringBuilder errorMessages = new StringBuilder("Required Fields:\n");
+
+        boolean missingFields = false;
 
         if (entity.getId() == null) {
-            errorMessages.append("Id is required.\n");
+            errorMessages.append("- ID\n");
+            missingFields = true;
         }
         if (entity.getCvlCode() == null) {
-            errorMessages.append("Civil code is required.\n");
+            errorMessages.append("- Civil code\n");
+            missingFields = true;
         }
         if (entity.getDptCode() == null) {
-            errorMessages.append("Department is required.\n");
+            errorMessages.append("- Department Code");
+            missingFields = true;
         }
 
-        if (errorMessages.length() > 0) {
+        if (missingFields) {
             throw new MissingValueException(errorMessages.toString().trim());
         }
 
         boolean exists = staffRepository.existsById(entity.getId());
+
         if (exists) {
-            throw new DuplicateIdException("A staff record exists for Id : " + entity.getId());
+            throw new DuplicateIdException("Staff record exists for given ID : " + entity.getId());
         } else {
+
             StaffEntity savedEntity = staffRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
         }
+    }
+
+    // CREATE STAFF 1 (ALTERNATIVE)
+    public ResponseEntity<?> createStaff1(StaffEntity entity) {
+        Map<String, String> errors = new HashMap<>();
+
+        if (entity.getId() == null) {
+            errors.put("id", "Id is required.");
+        }
+        if (entity.getCvlCode() == null) {
+            errors.put("cvlCode", "Civil code is required.");
+        }
+        if (entity.getDptCode() == null) {
+            errors.put("dptCode", "Department is required.");
+        }
+        if (entity.getFirstName() == null || entity.getFirstName().trim().isEmpty()) {
+            errors.put("firstName", "First name is required.");
+        }
+        if (entity.getLastName() == null || entity.getLastName().trim().isEmpty()) {
+            errors.put("lastName", "Last name is required.");
+        }
+
+        if (!errors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
+        boolean exists = staffRepository.existsById(entity.getId());
+
+        if (exists) {
+            errors.put("id", "A staff record exists for Id: " + entity.getId());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
+        StaffEntity savedEntity = staffRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
     }
 
     // UPDATE STAFF

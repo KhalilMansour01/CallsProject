@@ -1,56 +1,78 @@
 <div class="staff-form">
 
-  <h2>Add Staff</h2>
   <form (ngSubmit)="onSubmit()" #staffForm="ngForm">
-    <div>
+    <h2>Add Staff</h2>
+
+    <div class="form-group">
       <label for="id">ID:</label>
-      <input type="number" id="id" required [(ngModel)]="staff.id" name="id" #id="ngModel" />
+      <input type="text" id="id" required [(ngModel)]="staff.id" name="id" #id="ngModel" />
     </div>
-    <div>
+
+    <div class="form-group">
+      <label for="cvlCode">Civil Code:</label>
+      <select id="cvlCode" required [(ngModel)]="staff.cvlCode" name="cvlCode">
+        <option value="1">Mr.</option>
+        <option value="2">Mrs.</option>
+        <option value="3">Dr.</option>
+        <option value="4">None</option>
+      </select>
+    </div>
+
+    <div class="form-group">
       <label for="firstName">First Name:</label>
       <input type="text" id="firstName" required [(ngModel)]="staff.firstName" name="firstName" />
     </div>
-    <div>
+
+    <div class="form-group">
       <label for="middleName">Middle Name:</label>
       <input type="text" id="middleName" [(ngModel)]="staff.middleName" name="middleName" />
     </div>
-    <div>
+
+    <div class="form-group">
       <label for="lastName">Last Name:</label>
       <input type="text" id="lastName" required [(ngModel)]="staff.lastName" name="lastName" />
     </div>
-    <div>
+
+    <div class="form-group">
       <label for="title">Title:</label>
       <input type="text" id="title" [(ngModel)]="staff.title" name="title" />
     </div>
-    <div>
-      <label for="cvlCode">Civil Code:</label>
-      <select id="cvlCode" required [(ngModel)]="staff.cvlCode" name="cvlCode">
-        <option value="1">1: Mr.</option>
-        <option value="2">2: Mrs.</option>
-        <option value="3">3: Dr.</option>
-        <option value="4">4: None</option>
-      </select>
-    </div>
-    <div>
+
+
+
+    <div class="form-group">
       <label for="dptCode">Department Code:</label>
       <select id="dptCode" required [(ngModel)]="staff.dptCode" name="dptCode">
-        <option value="AC">AC: Accounting</option>
-        <option value="AD">AD: Administration</option>
-        <option value="HW">HW: Hardware Maintenance</option>
-        <option value="SW">SW: Software Maintenance</option>
+        <option value="AC">Accounting</option>
+        <option value="AD">Administration</option>
+        <option value="HW">Hardware Maintenance</option>
+        <option value="SW">Software Maintenance</option>
       </select>
     </div>
+
     <div class="actions">
       <button type="submit">Save</button>
       <button (click)="goBack()" class="btn btn-secondary">Back</button>
     </div>
 
   </form>
-  <!-- Success and fail message alert -->
-  <div *ngIf="successMessage" class="alert alert-success">
+
+  <div *ngIf="errorMessage && errorMessage.length > 0" class="error-popup">
+    <button class="close-popup" (click)="closeErrorPopup()">×</button>
+    <ul>
+      <li *ngFor="let message of errorMessage">{{ message }}</li>
+    </ul>
+  </div>
+
+  <div *ngIf="successMessage" class="success-popup">
+    <button class="close-popup" (click)="closeSuccessPopup()">×</button>
     {{ successMessage }}
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
+
+<!-- 
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div> -->
+  
+
 </div>

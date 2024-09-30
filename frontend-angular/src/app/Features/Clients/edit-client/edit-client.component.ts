@@ -12,7 +12,6 @@ export class EditClientComponent implements OnInit {
 
   client: any = {};
 
-
   countryMap: { [key: string]: string } = {
     '818': 'EGYPT',
     '276': 'GERMANY',

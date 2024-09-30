@@ -3,86 +3,97 @@
   <form (ngSubmit)="onSubmit()" #callForm="ngForm">
 
     <div class="form-row">
-      <div class="form-row">
+      <div class="form-group">
         <label for="id">ID:</label>
-        <input type="number" id="id" required [(ngModel)]="call.id" name="id" #id="ngModel" />
+        <input type="text" id="id" required [(ngModel)]="call.id" name="id" #id="ngModel" />
       </div>
-      <div class="form-row">
+  
+      <div class="form-group">
         <label for="fcat">Category:</label>
         <select id="fcat" required [(ngModel)]="call.fcat" name="fcat">
           <option value="HDW">Hardware</option>
           <option value="SOF">Software</option>
         </select>
       </div>
-      
     </div>
+    
 
     <div class="form-row">
-      <div class="form-row">
-        <label for="ccode">Client ID:</label>
-        <select id="ccode" required [(ngModel)]="call.ccode" name="ccode" (change)="onClientSelect(call.ccode)">
-          <option *ngFor="let client of clientsList" [value]="client.id">
-            {{ client.id }}: {{ client.custName }}
-          </option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="ecode">Staff ID:</label>
-        <select id="ecode" required [(ngModel)]="call.ecode" name="ecode" (change)="onStaffSelect(call.ecode)">
-          <option *ngFor="let staff of staffList" [value]="staff.id">
-            {{ staff.id }} - {{ staff.firstName }} {{ staff.lastName }}
-          </option>
-        </select>
-      </div>
+      <div class="form-group">
+      <label for="ccode">Client (ID : Name)</label>
+      <select id="ccode" required [(ngModel)]="call.ccode" name="ccode" (change)="onClientSelect(call.ccode)">
+        <option *ngFor="let client of clientsList" [value]="client.id">
+          {{ client.id }} : {{ client.custName }}
+        </option>
+      </select>
     </div>
-
+    <div class="form-group">
+      <label for="ecode">Staff (ID : Name)</label>
+      <select id="ecode" required [(ngModel)]="call.ecode" name="ecode" (change)="onStaffSelect(call.ecode)">
+        <option *ngFor="let staff of staffList" [value]="staff.id">
+          {{ staff.id }} : {{ staff.firstName }} {{ staff.lastName }}
+        </option>
+      </select>
+    </div>
+    </div>
+    
     <div class="form-row">
-      <div class="form-row">
+      <div class="form-group">
         <label for="reqDate">Request Date:</label>
         <input type="date" id="reqDate" required [(ngModel)]="call.reqDate" name="reqDate" #reqDate="ngModel" />
       </div>
-      <div class="form-row">
+      <div class="form-group">
         <label for="reqTime">Request Time:</label>
         <input type="time" id="reqTime" required [(ngModel)]="call.reqTime" name="reqTime" #reqTime="ngModel" />
       </div>
+  
+  
     </div>
     
 
 
-
-    <div class="form-row">
+    <div class="form-group">
       <label for="rem1">Remark 1:</label>
       <input type="text" id="rem1" required [(ngModel)]="call.rem1" name="rem1" />
     </div>
 
-    <div class="form-row">
+    <div class="form-group">
       <label for="rem2">Remark 2:</label>
       <input type="text" id="rem2" [(ngModel)]="call.rem2" name="rem2" />
     </div>
 
-    <div class="form-row">
+    <div class="form-group">
       <label for="rem3">Remark 3:</label>
       <input type="text" id="rem3" [(ngModel)]="call.rem3" name="rem3" />
     </div>
 
-    <div class="form-row">
+    <div class="form-group">
       <label for="rem4">Remark 4:</label>
       <input type="text" id="rem4" [(ngModel)]="call.rem4" name="rem4" />
     </div>
 
     <div class="actions">
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+
       <button type="submit" class="btn btn-secondary">Add & Print</button>
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
     </div>
 
   </form>
 
-  <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage && errorMessage.length > 0" class="alert alert-danger">
+  <div *ngIf="errorMessage && errorMessage.length > 0" class="error-popup">
+    <button class="close-popup" (click)="closeErrorPopup()">×</button>
     <ul>
       <li *ngFor="let message of errorMessage">{{ message }}</li>
     </ul>
   </div>
+
+  <div *ngIf="successMessage" class="success-popup">
+    <button class="close-popup" (click)="closeSuccessPopup()">×</button>
+    {{ successMessage }}
+  </div>
+
+  <!-- <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div> -->
+
 </div>

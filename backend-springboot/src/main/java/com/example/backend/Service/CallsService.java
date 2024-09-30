@@ -41,38 +41,44 @@ public class CallsService {
 
     // CREATE CALLS
     public ResponseEntity<CallsEntity> createCalls(CallsEntity callsEntity)
-            throws ResourceNotFoundException, DuplicateIdException {
+            throws DuplicateIdException {
 
-        StringBuilder errorMessages = new StringBuilder();
+        StringBuilder errorMessages = new StringBuilder("Required Fields:\n");
+
+        boolean missingFields = false;
 
         if (callsEntity.getId() == null) {
-            errorMessages.append("Id is required \n");
+            errorMessages.append("- ID\n");
+            missingFields = true;
         }
         if (callsEntity.getCCode() == null) {
-            errorMessages.append("Client Id is required \n");
+            errorMessages.append("- Client ID\n");
+            missingFields = true;
         }
         if (callsEntity.getECode() == null) {
-            errorMessages.append("Staff Id is required \n");
+            errorMessages.append("- Staff ID\n");
+            missingFields = true;
         }
         if (callsEntity.getReqDate() == null) {
-            errorMessages.append("Request Date is required \n");
+            errorMessages.append("- Request Date\n");
+            missingFields = true;
         }
         if (callsEntity.getReqTime() == null) {
-            errorMessages.append("Request Time is required \n");
+            errorMessages.append("- Request Time");
+            missingFields = true;
         }
 
-        if (errorMessages.length() > 0) {
-            throw new ResourceNotFoundException(errorMessages.toString().trim());
+        if (missingFields) {
+            throw new MissingValueException(errorMessages.toString().trim());
         }
 
         boolean exists = callsRepository.existsById(callsEntity.getId());
 
         if (exists) {
-            throw new DuplicateIdException("Calls record exists for given id : " + callsEntity.getId());
+            throw new DuplicateIdException("Calls record exists for given ID : " + callsEntity.getId());
         } else {
 
             CallsEntity savedEntity = callsRepository.save(callsEntity);
-
             return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
         }
     }
@@ -85,22 +91,28 @@ public class CallsService {
 
         if (existingCalls.isOpen()) {
 
-            StringBuilder errorMessages = new StringBuilder();
+            StringBuilder errorMessages = new StringBuilder("Missing Fields:\n");
+
+            boolean missingFields = false;
 
             if (callsEntity.getRespDate() == null) {
-                errorMessages.append("Response Date is required \n");
+                errorMessages.append("- Response Date\n");
+                missingFields = true;
             }
             if (callsEntity.getRespTime() == null) {
-                errorMessages.append("Response Time is required \n");
+                errorMessages.append("- Response Time\n");
+                missingFields = true;
             }
             if (callsEntity.getTimeArrive() == null) {
-                errorMessages.append("Time Arrived is required \n");
+                errorMessages.append("- Time Arrived\n");
+                missingFields = true;
             }
             if (callsEntity.getTimeLeft() == null) {
-                errorMessages.append("Time Left is required \n");
+                errorMessages.append("- Time Left");
+                missingFields = true;
             }
 
-            if (errorMessages.length() > 0) {
+            if (missingFields) {
                 throw new MissingValueException(errorMessages.toString().trim());
             }
 

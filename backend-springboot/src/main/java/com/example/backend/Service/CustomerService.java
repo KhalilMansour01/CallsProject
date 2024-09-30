@@ -5,22 +5,25 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.Entity.CustomerEntity;
 import com.example.backend.Repository.CustomerRepository;
 import com.example.backend.Specifications.CustomerSpecifications;
+import com.example.backend.Exceptions.DuplicateIdException;
+import com.example.backend.Exceptions.MissingValueException;
 import com.example.backend.Exceptions.ResourceNotFoundException;
 
 @Service
 public class CustomerService {
     @Autowired
-    CustomerRepository repository;
+    CustomerRepository customerRepository;
 
     // GET ALL CUSTOMER
     public List<CustomerEntity> getAllCustomer() {
-        List<CustomerEntity> customerList = repository.findAll();
+        List<CustomerEntity> customerList = customerRepository.findAll();
 
         if (customerList.size() > 0) {
             return customerList;
@@ -31,27 +34,60 @@ public class CustomerService {
 
     // GET CUSTOMER BY ID
     public ResponseEntity<CustomerEntity> getCustomerById(BigDecimal id) throws ResourceNotFoundException {
-        CustomerEntity customer = repository.findById(id)
+        CustomerEntity customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No customer record exist for given id :: " + id));
         return ResponseEntity.ok().body(customer);
     }
 
     // CREATE CUSTOMER
-    public ResponseEntity<CustomerEntity> createCustomer(CustomerEntity entity) throws ResourceNotFoundException {
-        boolean exists = repository.existsById(entity.getId());
+    public ResponseEntity<CustomerEntity> createCustomer(CustomerEntity entity)
+            throws DuplicateIdException {
+
+        StringBuilder errorMessages = new StringBuilder("Required Fields:\n");
+
+        boolean missingFields = false;
+
+        if (entity.getId() == null) {
+            errorMessages.append("- ID\n");
+            missingFields = true;
+        }
+        if (entity.getCustName() == null) {
+            errorMessages.append("- Customer Name\n");
+            missingFields = true;
+        }
+        if (entity.getCvlCode() == null) {
+            errorMessages.append("- Civil Code\n");
+            missingFields = true;
+        }
+        if (entity.getRegCode() == null) {
+            errorMessages.append("- Region Code\n");
+            missingFields = true;
+        }
+        if (entity.getCntrCode() == null) {
+            errorMessages.append("- Country Code\n");
+            missingFields = true;
+        }
+
+        if (missingFields) {
+            throw new MissingValueException(errorMessages.toString().trim());
+        }
+
+        boolean exists = customerRepository.existsById(entity.getId());
+
         if (exists) {
-            throw new ResourceNotFoundException("Customer record exists for given id :: " + entity.getId());
+            throw new DuplicateIdException("Customer record exists for given ID : " + entity.getId());
         } else {
-            repository.save(entity);
-            return ResponseEntity.status(201).body(entity);
+
+            CustomerEntity savedEntity = customerRepository.save(entity);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
         }
     }
 
     // UPDATE CUSTOMER
     public ResponseEntity<CustomerEntity> updateCustomer(BigDecimal id, CustomerEntity entity)
             throws ResourceNotFoundException {
-        CustomerEntity existingCustomer = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No customer record exist for given id :: " + id));
+        CustomerEntity existingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No customer record exist for given ID : " + id));
 
         if (entity.getCvlCode() != null) {
             existingCustomer.setCvlCode(entity.getCvlCode());
@@ -102,16 +138,16 @@ public class CustomerService {
             existingCustomer.setAddress2(entity.getAddress2());
         }
 
-        final CustomerEntity updatedCustomer = repository.save(existingCustomer);
+        final CustomerEntity updatedCustomer = customerRepository.save(existingCustomer);
         return ResponseEntity.ok(updatedCustomer);
     }
 
     // DELETE CUSTOMER BY ID
     public ResponseEntity<CustomerEntity> deleteCustomerById(BigDecimal id) throws ResourceNotFoundException {
-        CustomerEntity customer = repository.findById(id)
+        CustomerEntity customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No customer record exist for given id :: " + id));
 
-        repository.delete(customer);
+        customerRepository.delete(customer);
         return ResponseEntity.ok().build();
     }
 
@@ -119,13 +155,13 @@ public class CustomerService {
     public List<CustomerEntity> filterCustomers(String regCode, String cntrCode) {
         Specification<CustomerEntity> spec = Specification.where(CustomerSpecifications.hasRegion(regCode))
                 .and(CustomerSpecifications.hasCountry(cntrCode));
-        return repository.findAll(spec);
+        return customerRepository.findAll(spec);
     }
 
     // SEARCH CUSTOMERS BY QUERY
     public List<CustomerEntity> searchCustomers(String searchQuery) {
         Specification<CustomerEntity> spec = CustomerSpecifications.searchByMultipleFields(searchQuery);
-        return repository.findAll(spec);
+        return customerRepository.findAll(spec);
     }
 
     // FILTER AND SEARCH CUSTOMERS
@@ -135,7 +171,7 @@ public class CustomerService {
                 .and(CustomerSpecifications.hasCountry(cntrCode))
                 .and(CustomerSpecifications.searchByMultipleFields(searchQuery));
 
-        return repository.findAll(spec);
+        return customerRepository.findAll(spec);
     }
 
 }

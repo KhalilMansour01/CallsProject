@@ -1,107 +1,100 @@
 <div class="client-form">
 
   <div *ngIf="client">
-    <h2>View Client</h2>
+    <h2>View Client: {{ client.id }}</h2>
+    <div class="form-group">
+      <label for="id">ID: </label>
+      <input type="text" id="id" [(ngModel)]="client.id" name="id" #id="ngModel" readonly />
+    </div>
+
     <div class="form-row">
-      <div>
-        <label>ID:</label>
-        <p>{{ client.id }}</p>
+
+      <div class="form-group">
+        <label for="custName">Client Name:</label>
+        <input type="text" id="custName" [(ngModel)]="client.custName" name="custName" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="cvlCode">Civil Code:</label>
+        <input type="text" id="cvlCode" [(ngModel)]="client.cvlCode" name="cvlCode" readonly />
       </div>
 
     </div>
 
     <div class="form-row">
-      <div>
-        <label>Client Name:</label>
-        <p>{{ client.custName }}</p>
+
+      <div class="form-group">
+        <label for="cntrCode">Country:</label>
+        <input type="text" id="cntrCode" [value]="getCountryName(client.cntrCode)" name="cntrCode" readonly />
       </div>
-      <div>
-        <label>Civil Code:</label>
-        <p>{{ client.cvlCode }}: {{ client.cvlCode === '1' ? 'Mr.' : client.cvlCode === '2' ? 'Mrs.' : client.cvlCode
-          === '3' ? 'Dr.' : 'None' }}</p>
+
+      <div class="form-group">
+        <label for="regCode">Region:</label>
+        <input type="text" id="regCode" [value]="getRegionName(client.regCode)" name="regCode" readonly />
       </div>
 
     </div>
 
     <div class="form-row">
-      <div>
-        <label>Country:</label>
-        <p>{{ client.cntrCode }}: {{ client.cntrCodeName }}</p>
+      <div class="form-group">
+        <label for="fax">Fax:</label>
+        <input type="text" id="fax" [(ngModel)]="client.fax" name="fax" readonly />
       </div>
       <div>
-        <label>Region:</label>
-        <p>{{ client.regCode }}: {{ client.regCodeName }}</p>
+        <label for="email">Email:</label>
+        <input type="email" id="email" [(ngModel)]="client.email" name="email" readonly />
       </div>
+
     </div>
 
     <div class="form-row">
 
-      <div>
-        <label>Fax:</label>
-        <p>{{ client.fax }}</p>
+      <div class="form-group">
+        <label for="tel1">Telephone 1:</label>
+        <input type="tel" id="tel1" [(ngModel)]="client.tel1" name="tel1" readonly />
       </div>
-      <div>
-        <label>Email:</label>
-        <p>{{ client.email }}</p>
+
+      <div class="form-group">
+        <label for="tel2">Telephone 2:</label>
+        <input type="tel" id="tel2" [(ngModel)]="client.tel2" name="tel2" readonly />
       </div>
-    </div>
-    
-    <div class="form-row">
-      <div>
-        <label>Telephone 1:</label>
-        <p>{{ client.tel1 }}</p>
+
+      <div class="form-group">
+        <label for="tel3">Telephone 3:</label>
+        <input type="tel" id="tel3" [(ngModel)]="client.tel3" name="tel3" readonly />
       </div>
-      <div>
-        <label>Telephone 2:</label>
-        <p>{{ client.tel2 }}</p>
-      </div>
-      <div>
-        <label>Telephone 3:</label>
-        <p>{{ client.tel3 }}</p>
-      </div>
+
     </div>
 
-    
 
-    <div class="form-row">
 
-      <div>
-        <label>Contact:</label>
-        <p>{{ client.contact }}</p>
-      </div>
+    <div class="form-group">
+      <label for="contact">Contact:</label>
+      <input type="text" id="contact" [(ngModel)]="client.contact" name="contact" readonly />
     </div>
 
-    <div class="form-row">
-      <div>
-        <label>Address 1:</label>
-        <p>{{ client.address1 }}</p>
-      </div>
-      <div>
-        <label>Address 2:</label>
-        <p>{{ client.address2 }}</p>
-      </div>
+    <div class="form-group">
+      <label for="address1">Address 1:</label>
+      <input type="text" id="address1" [(ngModel)]="client.address1" name="address1" readonly />
     </div>
 
-    <div class="form-row">
-      <div>
-        <label>VAT Status:</label>
-        <p>{{ client.vatStatus == 1 ? 'Yes' : 'No' }}</p>
-      </div>
-      
+    <div class="form-group">
+      <label for="address2">Address 2:</label>
+      <input type="text" id="address2" [(ngModel)]="client.address2" name="address2" readonly />
     </div>
 
-    <div class="form-row">
-      <div>
-        <label>VAT Cash:</label>
-        <p>{{ client.vatCash == 1 ? 'Yes' : 'No' }}</p>
-      </div>
+    <div class="form-group">
+      <label for="vatStatus">VAT Status: {{ client.vatStatus ? 'Yes' : 'No' }}</label>
+    </div>
+
+    <div class="form-group">
+      <label for="vatCash">VAT Cash: {{ client.vatCash ? 'Yes' : 'No' }}</label>
     </div>
 
     <div class="actions">
       <button (click)="editClient()" class="btn btn-secondary">Edit</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
 
-      <!-- <button (click)="printClientDetails()" class="btn btn-primary">Print</button> -->
+      <button (click)="goBack()" class="btn btn-secondary">Back</button>
     </div>
   </div>
 

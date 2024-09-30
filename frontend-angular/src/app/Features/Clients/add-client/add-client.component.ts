@@ -10,25 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class AddClientComponent implements OnInit {
 
-  client = {
-    id: null,
-    cvlCode: null,
-    custName: '',
-    custNameA: '',
-    tel1: '',
-    tel2: '',
-    tel3: '',
-    fax: '',
-    regCode: '',
-    cntrCode: '',
-    contact: '',
-    contactA: '',
-    vatStatus: '',
-    vatCash: '',
-    email: '',
-    address1: '',
-    address2: '',
-  };
+  client: any = {};
 
   countryMap: { [key: string]: string } = {
     '818': 'EGYPT',
@@ -78,12 +60,12 @@ export class AddClientComponent implements OnInit {
     this.regionKeys = Object.keys(this.regionMap);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onSubmit() {
     this.successMessage = null;
     this.errorMessage = null;
+
     this.clientService.addClient(this.client).subscribe({
       next: () => {
         this.successMessage = 'Client added successfully!';
@@ -92,7 +74,7 @@ export class AddClientComponent implements OnInit {
         console.error('Error adding client:', err);
 
         if (err.error && err.error.message) {
-          this.errorMessage = err.error.message;
+          this.errorMessage = err.error.message.split('\n');
         } else if (err.status === 0) {
           this.errorMessage = 'Could not connect to the server. Please try again later.';
         } else {
@@ -105,6 +87,14 @@ export class AddClientComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/clients/list']);
+  }
+
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
+
+  closeSuccessPopup() {
+    this.successMessage = null;
   }
 
 }

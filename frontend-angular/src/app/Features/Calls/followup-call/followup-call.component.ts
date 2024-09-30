@@ -69,7 +69,7 @@ export class FollowupCallComponent implements OnInit {
     });
   }
 
-  updateCall(): void {
+  onSubmit(): void {
     this.callsService.updateCall(this.call).subscribe({
       next: () => {
         this.successMessage = 'Call updated successfully';
@@ -88,6 +88,14 @@ export class FollowupCallComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate([`calls/view/${this.call.id}`]);
+  }
+
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
+
+  closeSuccessPopup() {
+    this.successMessage = null;
   }
 
 }

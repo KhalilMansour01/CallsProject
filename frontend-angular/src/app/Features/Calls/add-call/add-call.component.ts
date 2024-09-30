@@ -41,8 +41,6 @@ export class AddCallComponent implements OnInit {
     this.successMessage = null;
     this.errorMessage = null;
 
-    console.log(this.call);
-
     this.callsService.addCall(this.call).subscribe({
       next: () => {
         this.successMessage = 'Call added successfully!';
@@ -123,5 +121,12 @@ export class AddCallComponent implements OnInit {
     );
   }
 
-  
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
+
+  closeSuccessPopup() {
+    this.successMessage = null;
+  }
+
 }

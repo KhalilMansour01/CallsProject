@@ -11,15 +11,7 @@ import { StaffService } from 'src/app/Services/staff.service';
 })
 export class AddStaffComponent implements OnInit {
 
-  staff = {
-    id: null,
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    title: '',
-    cvlCode: null,
-    dptCode: null
-  };
+  staff: any = {};
 
   successMessage: string | null = null;
   errorMessage: string | null = null;
@@ -34,17 +26,22 @@ export class AddStaffComponent implements OnInit {
   }
 
   onSubmit() {
+
     this.successMessage = null;
     this.errorMessage = null;
+
     this.staffService.addStaff(this.staff).subscribe({
       next: () => {
         this.successMessage = 'Staff added successfully!';
+        // setTimeout(() => {
+        //   this.successMessage = null;
+        // }, 5000);
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error adding staff:', err);
 
         if (err.error && err.error.message) {
-          this.errorMessage = err.error.message;
+          this.errorMessage = err.error.message.split('\n');
         } else if (err.status === 0) {
           this.errorMessage = 'Could not connect to the server. Please try again later.';
         } else {
@@ -57,6 +54,14 @@ export class AddStaffComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/staff/list']);
+  }
+
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
+
+  closeSuccessPopup() {
+    this.successMessage = null;
   }
 
 }
