@@ -59,6 +59,9 @@ public class CustomerEntity {
     @Column(name = "address2")
     private String address2;
 
+    @Column(name = "status")
+    private boolean status = true;
+
     public BigDecimal getId() {
         return id;
     }
@@ -195,6 +198,14 @@ public class CustomerEntity {
         this.address2 = address2;
     }
     
+    public boolean getStatus() {
+        return status;
+    }
+    
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "CustomerEntity{" +

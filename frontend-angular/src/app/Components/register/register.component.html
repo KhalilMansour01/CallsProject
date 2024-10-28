@@ -5,35 +5,56 @@
     <div class="form-row">
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" id="username" formControlName="username" />
-        <div *ngIf="username?.hasError('usernameTaken')" class="error">Username is already taken</div>
+        <input type="text" id="username" formControlName="username"
+          [ngClass]="{'is-invalid': username?.invalid && (username?.touched || username?.dirty)}" />
+
+        <div class="error-container">
+          <div *ngIf="registerForm.get('username')?.hasError('usernameExists')" class="error">Username is already taken
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" formControlName="email" />
+        <input type="email" id="email" formControlName="email"
+          [ngClass]="{'is-invalid': email?.invalid && (email?.touched || email?.dirty)}" />
+        <div class="error-container">
+          <div *ngIf="email?.hasError('email')" class="error">
+            Please enter a valid email address
+          </div>
+        </div>
+
+
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" formControlName="password" />
+        <input type="password" id="password" formControlName="password"
+          [ngClass]="{'is-invalid': password?.invalid && (password?.touched || password?.dirty)}" />
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" formControlName="confirmPassword" />
-        <div *ngIf="registerForm.hasError('passwordsMismatch')" class="error">Passwords do not match</div>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword"
+          [ngClass]="{'is-invalid': confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)}" />
+        <div class="error-container">
+          <div *ngIf="registerForm.hasError('passwordsMismatch')" class="error">Passwords do not match</div>
+        </div>
       </div>
     </div>
+
     <div class="form-row">
       <div class="form-group">
         <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" formControlName="firstName" />
+        <input type="text" id="firstName" formControlName="firstName"
+          [ngClass]="{'is-invalid': firstName?.invalid && (firstName?.touched || firstName?.dirty)}" />
       </div>
       <div class="form-group">
         <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" formControlName="lastName" />
+        <input type="text" id="lastName" formControlName="lastName"
+          [ngClass]="{'is-invalid': lastName?.invalid && (lastName?.touched || lastName?.dirty)}" />
       </div>
     </div>
+
     <div class="form-row">
       <div class="form-group">
         <label for="telephone">Phone Number:</label>
@@ -48,9 +69,14 @@
     </div>
 
     <div class="button-container">
-      <button type="submit" [disabled]="registerForm.invalid" class="register-button">Register</button>
+      <button type="submit" class="register-button">Register</button>
       <a class="login-button" routerLink="/login">Login</a>
     </div>
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+    
+    <div class="error-container centered-error">
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    </div>
+    
   </form>
 </div>

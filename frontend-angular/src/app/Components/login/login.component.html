@@ -1,18 +1,19 @@
 <div class="login-form">
-    <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" formControlName="username" />
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" formControlName="password" />
-        </div>
-        <div class="button-container">
-            <button type="submit" [disabled]="loginForm.invalid" class="login-button">Login</button>
-            <a class="register-button" routerLink="/register">Register</a>
-        </div>
-        <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    </form>
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName="username" />
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" formControlName="password" />
+    </div>
+    <div [class.hidden]="!errorMessage" class="error">{{ errorMessage || ' ' }}</div>
+
+    <div class="button-container">
+      <button type="submit" class="login-button">Login</button>
+      <a class="register-button" routerLink="/register">Register</a>
+    </div>
+  </form>
 </div>

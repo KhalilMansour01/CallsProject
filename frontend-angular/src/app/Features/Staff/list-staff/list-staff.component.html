@@ -1,34 +1,78 @@
 <div class="container staff-container">
-  <h2 class="page-title">Staff Dashboard</h2>
-  <div class="search-bar">
-    <input
-      type="text"
-      placeholder="Search Staff"
-      [(ngModel)]="searchQuery"
-      
-      (input)="onSearch()"
-    />
+  <div class="header-row">
+    <h2 class="page-title">Staff Dashboard</h2>
   </div>
 
-  <!-- Filter and Add Button Row -->
-  <div class="filter-row">
-    <!-- Department Filter -->
+  <div class="search-filter-row">
+    <div class="search-bar">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search Staff by ID, Name, Title" [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchInputChange($event)" (input)="onSearch()" class="search-input" />
+      <button *ngIf="searchQuery" class="clear-button" (click)="clearSearch()">×</button>
+      <button (click)="addStaff()" class="btn btn-add">Add Staff</button>
+    </div>
+
     <div class="filter-options">
-      <label for="departmentFilter" class="filter-label">Department:</label>
+      <button (click)="resetFilters()" class="btn btn-clear"><i class="fas fa-undo"></i></button>
       <select id="departmentFilter" [(ngModel)]="selectedDepartment" (change)="applyFilters($event.target.value)">
         <option *ngFor="let key of departmentKeys" [value]="key">{{ departmentMap[key] }}</option>
       </select>
-      <button (click)="clearFilters()" class="btn btn-clear">Clear Filters</button>
+
     </div>
 
-    <!-- Add Staff Button -->
-    
-      <button (click)="addStaff()" class="btn btn-add">Add Staff</button>
-    
+    <div class="sort-options">
+      <span>Sort By:</span>
+      <select [(ngModel)]="sortField" (change)="changeSorting(sortField)">
+        <option value="id">ID</option>
+        <option value="firstName">First Name</option>
+        <option value="lastName">Last Name</option>
+        <option value="cvlCode">Civil Code</option>
+      </select>
+
+      <div class="sort-container">
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'asc'}"
+          name="Ascending">
+          <i class="fas fa-sort-up"></i>
+        </button>
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'desc'}"
+          name="Descending">
+          <i class="fas fa-sort-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pagination-controls">
+
+      <div class="total-records">Total Current Records: {{ totalRecords }}</div>
+
+      <div class="pagination-buttons">
+
+        <button (click)="firstPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+
+        <button (click)="previousPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-left"></i>
+        </button>
+
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-right"></i>
+        </button>
+
+        <button (click)="lastPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+
+      <div class="records-per-page">
+        <span class="page-size-span">Records per page:</span>
+        <input type="number" [(ngModel)]="pageSize" (input)="onPageSizeChange($event.target.value)" min="1" max="100" />
+      </div>
+    </div>
   </div>
 
-
-  <!-- Staff Table -->
   <div class="staff-table-container">
     <table class="staff-table">
       <thead>
@@ -37,25 +81,22 @@
           <th>Full Name</th>
           <th>Title</th>
           <th>Department</th>
+          <th>Status</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let staff of staffList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
           <td>{{ staff.id }}</td>
-          <td>{{ getCivilName(staff.cvlCode) }} {{ staff.firstName }} {{ staff.middleName }} {{ staff.lastName }}</td>
-          <td>{{ staff.title }}</td>
+          <td>{{ staff.firstName }} {{ staff.middleName }} {{ staff.lastName }}</td>
+          <td>{{ staff.title ? staff.title : '-' }}</td>
           <td>{{ getDepartmentName(staff.dptCode) }}</td>
+          <td [ngClass]="{ 'status-open': staff.status, 'status-closed': !staff.status }">
+            {{ staff.status ? 'Active' : 'Inactive' }}</td>
           <td>
             <div class="actions">
-              <!-- <button (click)="editStaff(staff)" class="btn-action" title="Edit">
-                <i class="fas fa-edit"></i>
-              </button> -->
               <button (click)="viewStaff(staff)" class="btn-action" title="View">
                 <i class="fas fa-eye"></i>
-              </button>
-              <button (click)="confirmDelete(staff.id)" class="btn-action" title="Delete">
-                <i class="fas fa-trash"></i>
               </button>
             </div>
           </td>
@@ -63,4 +104,5 @@
       </tbody>
     </table>
   </div>
+
 </div>

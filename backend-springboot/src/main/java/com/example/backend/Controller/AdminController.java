@@ -79,7 +79,7 @@ public class AdminController {
 
     
     @GetMapping("/checkIfExist/{username}")
-    public Boolean checkIfAdminExists(@RequestParam String username) {
+    public Boolean checkIfAdminExists(@PathVariable String username) {
         return adminService.checkIfAdminExists(username);
     }
 

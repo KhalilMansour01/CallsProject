@@ -70,16 +70,11 @@ export class EditClientComponent implements OnInit {
     this.successMessage = null;
     this.errorMessage = null;
 
-    this.client.vatStatus = this.client.vatStatus ? '1' : '0';
-    this.client.vatCash = this.client.vatCash ? '1' : '0';
-
-
 
     this.clientsService.updateClient(this.client).subscribe({
       next: () => {
         this.successMessage = 'Client updated successfully!';
-        this.client.vatStatus = this.client.vatStatus === '1';
-        this.client.vatCash = this.client.vatCash === '1';
+
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error updating client:', err);
@@ -110,5 +105,14 @@ export class EditClientComponent implements OnInit {
   goBack() {
     this.router.navigate([`/clients/view/${this.client.id}`]);
   }
+
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
+
+  closeSuccessPopup() {
+    this.successMessage = null;
+  }
+
 
 }

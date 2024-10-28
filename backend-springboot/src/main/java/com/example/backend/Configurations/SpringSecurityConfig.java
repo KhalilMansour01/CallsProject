@@ -38,12 +38,19 @@ public class SpringSecurityConfig {
         return httpSecurity
         .csrf(AbstractHttpConfigurer::disable)  //by default csrf is enabled, it blocks post requests
         .authorizeHttpRequests(registry ->{
-            registry.requestMatchers("/staff/**").permitAll();
-            registry.requestMatchers("/customer/**").permitAll();
-            registry.requestMatchers("/calls/**").permitAll();
-            registry.requestMatchers("/admin/**").permitAll();
+            registry.requestMatchers("/staff/**").hasRole("ADMIN");
+            // registry.requestMatchers("/staff/**").hasAnyRole("ADMIN", "USER");
+            registry.requestMatchers("/customer/**").hasRole("ADMIN");
+            registry.requestMatchers("/calls/**").hasRole("ADMIN");
+            registry.requestMatchers("/admin/findByUsername/{username}").hasRole("ADMIN");
+
+            registry.requestMatchers(
+                "/admin/authenticate", 
+                            "/admin/register",
+                            "/admin/checkIfExist/{username}")
+                            .permitAll();
             // registry.requestMatchers("/admin/authenticate").permitAll();
-            // registry.requestMatchers("/admin/findByUsername/{username}").hasAnyAuthority("ROLE_ADMIN");
+            // registry.requestMatchers("/**").permitAll();
             registry.anyRequest().authenticated();
         })
         .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)

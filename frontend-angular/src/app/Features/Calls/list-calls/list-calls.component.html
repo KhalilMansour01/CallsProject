@@ -1,85 +1,115 @@
-<div class="container">
-  <h2 class="page-title">Calls Dashboard</h2>
-  <div class="search-bar">
-    <input
-      type="text"
-      placeholder="Search Calls"
-      [(ngModel)]="searchQuery"
-      
-      (input)="onSearch()"
-    />
+<div class="container calls-container">
+  <div class="header-row">
+    <h2 class="page-title">Calls Dashboard</h2>
   </div>
 
-  <div class="filter-row">
-    <!-- Filter Options on the Left -->
-    <div class="filter-options">
-      <!-- Category Filter -->
-      <div class="filter-item">
-        <label for="categoryFilter" class="filter-label">Category:</label>
-        <select id="categoryFilter" [(ngModel)]="selectedCategory" (change)="applyCategoryFilter($event.target.value)">
-          <option *ngFor="let key of categoryKeys" [value]="key">{{ categoryMap[key] }}</option>
-        </select>
-      </div>
+  <div class="search-filter-row">
+    <div class="search-bar">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search Calls by ID, Category, Remarks" [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchInputChange($event)" (input)="onSearch()" class="search-input" />
+      <button *ngIf="searchQuery" class="clear-button" (click)="clearSearch()">×</button>
 
-      <!-- Status Filter -->
-      <div class="filter-item">
-        <label for="statusFilter" class="filter-label">Status:</label>
-        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="applyStatusFilter($event.target.value)">
-          <option *ngFor="let key of statusKeys" [value]="key">{{ statusMap[key] }}</option>
-        </select>
-      </div>
-
-      <!-- Clear Filters Button -->
-      <button (click)="clearFilters()" class="btn btn-clear">Clear Filters</button>
-
+      <button (click)="addCall()" class="btn btn-add">Add Call</button>
     </div>
-    <!-- Add Call Button on the Right -->
-    <button (click)="addCall()" class="btn btn-add">Add Call</button>
+
+    <div class="filter-options">
+      <button (click)="resetFilters()" class="btn btn-clear"><i class="fas fa-undo"></i></button>
+      <select id="categoryFilter" [(ngModel)]="selectedCategory" (change)="applyCategoryFilter($event.target.value)"
+        title="Category">
+        <option *ngFor="let key of categoryKeys" [value]="key">{{ categoryMap[key] }}</option>
+      </select>
+      <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="applyStatusFilter($event.target.value)">
+        <option *ngFor="let key of statusKeys" [value]="key">{{ statusMap[key] }}</option>
+      </select>
+    </div>
+
+    <div class="sort-options">
+
+      <span>Sort By:</span>
+      <select [(ngModel)]="sortField" (change)="changeSortingField(sortField)">
+        <option value="id">ID</option>
+        <option value="cCode">Client ID</option>
+        <option value="eCode">Staff ID</option>
+        <option value="reqDate">Request Date</option>
+      </select>
+
+      <div class="sort-container">
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'asc'}">
+          <i class="fas fa-sort-up"></i>
+        </button>
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'desc'}">
+          <i class="fas fa-sort-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pagination-controls">
+      <div class="total-records">Total Current Records: {{ totalRecords }}</div>
+    
+      <div class="pagination-buttons">
+        <button (click)="firstPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button (click)="previousPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-left"></i>
+        </button>
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-right"></i>
+        </button>
+        <button (click)="lastPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+
+      <div class="records-per-page">
+        <span class="page-size-span">Records per page:</span>
+        <input type="number" [(ngModel)]="pageSize" (input)="onPageSizeChange($event.target.value)" min="1" max="100"/>
+      </div>
+    </div>
+    
   </div>
-  
-  <table class="call-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Client ID</th>
-        <th>Staff ID</th>
-        <th>Category</th>
 
-        <th>Request Date</th>
-        <th>Request Time</th>
-        <th>Remark</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let call of callsList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
-        <td>{{ call.id }}</td>
-        <td>{{ call.ccode }}</td>
-        <td>{{ call.ecode }}</td>
-        <td>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</td>
-
-        <td>{{ call.reqDate | date: 'yyyy-MM-dd' }}</td>
-        <td>{{ call.reqTime }}</td>
-        <td>{{ call.rem1 }}</td>
-        <td [ngClass]="{ 'status-open': call.open, 'status-closed': !call.open }">
-          {{ call.open ? 'Open' : 'Closed' }}
-        </td>
-        <td>
-          <div class="actions">
-
-            <!-- <button (click)="followupCall(call)" class="btn-action" title="Follow Up">
-              <i class="fas fa-edit"></i>
-            </button> -->
-            <button (click)="viewCall(call)" class="btn-action" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button (click)="confirmDelete(call.id)" class="btn-action" title="Delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="calls-table-container">
+    <table class="call-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Client ID</th>
+          <th>Staff ID</th>
+          <th>Category</th>
+          <th>Request Date</th>
+          <th>Request Time</th>
+          <th>Remark</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let call of callsList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
+          <td>{{ call.id }}</td>
+          <td>{{ call.ccode }}</td>
+          <td>{{ call.ecode }}</td>
+          <td>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : '-' }}</td>
+          <td>{{ call.reqDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ call.reqTime }}</td>
+          <td>{{ call.rem1 ? call.rem1 : '-'}}</td>
+          <td [ngClass]="{ 'status-open': call.open, 'status-closed': !call.open }">
+            {{ call.open ? 'Open' : 'Closed' }}
+          </td>
+          <td>
+            <div class="actions">
+              <button (click)="viewCall(call)" class="btn-action" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button (click)="confirmDelete(call.id)" class="btn-action" title="Delete" [disabled]="!call.open">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

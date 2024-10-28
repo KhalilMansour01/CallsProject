@@ -3,39 +3,37 @@
   <form (ngSubmit)="onSubmit()" #callForm="ngForm">
     <h2>Follow-Up Call: {{ call.id }}</h2>
     <div class="form-row">
-      <div class="form-group">
-        <label>ID:</label>
-        <p>{{ call.id }}</p>
-      </div>
-      
-      <div class="form-group">
-        <label>Category:</label>
-        <p>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</p>
-      </div>
-    </div>
+			<div class="form-group">
+				<label>ID:</label>
+				<p>{{ call.id }}</p>
+			</div>
+			<div class="form-group">
+				<label>Category:</label>
+				<p>{{ call.fcat === 'HDW' ? 'Hardware' : call.fcat === 'SOF' ? 'Software' : call.fcat }}</p>
+			</div>
+		</div>
 
-     <div class="form-row">
-      <div class="form-group">
-        <label>Client:</label>
-        <p>{{ client.id }}: {{ client.custName }}</p>
-      </div>
-  
-      <div class="form-group">
-        <label>Staff:</label>
-        <p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
-      </div>
-     </div>
+		<div class="form-row">
+			<div class="form-group">
+				<label>Client:</label>
+				<p>{{ client.id }}: {{ client.custName }}</p>
+			</div>
+			<div class="form-group">
+				<label>Staff:</label>
+				<p>{{ staff.id }}: {{ staff.firstName }} {{ staff.lastName }}</p>
+			</div>
+		</div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Request Date:</label>
-        <p>{{ call.reqDate | date: 'dd/MM/yyyy' }}</p>
-      </div>
-      <div class="form-group">
-        <label>Request Time:</label>
-        <p>{{ call.reqTime }}</p>
-      </div>
-    </div>
+		<div class="form-row">
+			<div class="form-group">
+				<label>Request Date:</label>
+				<p>{{ call.reqDate | date: 'yyyy-MM-dd' }}</p>
+			</div>
+			<div class="form-group">
+				<label>Request Time:</label>
+				<p>{{ call.reqTime }}</p>
+			</div>
+		</div>
 
     <div class="form-row">
       <div class="form-group">
@@ -59,7 +57,23 @@
       </div>
     </div>
 
-    <div class="form-group">
+   <!-- Normal Remarks -->
+		<div class="form-group" *ngIf="(call.rem1 || call.rem2 || call.rem3 || call.rem4); else noNormalRemarks">
+			<label>Previous Remarks:</label>
+			<ul>
+				<li *ngIf="call.rem1">{{ call.rem1 }}</li>
+				<li *ngIf="call.rem2">{{ call.rem2 }}</li>
+				<li *ngIf="call.rem3">{{ call.rem3 }}</li>
+				<li *ngIf="call.rem4">{{ call.rem4 }}</li>
+			</ul>
+		</div>
+		<ng-template #noNormalRemarks>
+      <div class="form-group">
+        <label>- No Previous Remarks</label>
+      </div>
+		</ng-template>
+
+    <!-- <div class="form-group">
       <label>Remark 1:</label>
       <p>{{ call.rem1 }}</p>
     </div>
@@ -74,9 +88,9 @@
     <div class="form-group">
       <label>Remark 4:</label>
       <p>{{ call.rem4 }}</p>
-    </div>
+    </div> -->
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label>Act Remark 1:</label>
       <input type="text" [(ngModel)]="call.actRem1" name="actRem1" />
     </div>
@@ -91,28 +105,32 @@
     <div class="form-group">
       <label>Act Remark 4:</label>
       <input type="text" [(ngModel)]="call.actRem4" name="actRem4" />
+    </div> -->
+
+    <div class="form-group">
+      <label for="rem1">Additional Remarks:</label>
+      <input type="text" id="actRem1" [(ngModel)]="call.actRem1" name="rem1" />
+      <input type="text" id="actRem2" [(ngModel)]="call.actRem2" name="rem2" />
+      <input type="text" id="actRem3" [(ngModel)]="call.actRem3" name="rem3" />
+      <input type="text" id="actRem4" [(ngModel)]="call.actRem4" name="rem4" />
     </div>
 
     <div class="actions">
       <button type="submit" class="btn btn-secondary">Save</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button (click)="goBack()" class="btn btn-secondary">Cancel</button>
     </div>
   </form>
 
   <div *ngIf="errorMessage && errorMessage.length > 0" class="error-popup">
-    <button class="close-popup" (click)="closeErrorPopup()">×</button>
+    <button class="close-popup" (click)="closeErrorPopup()">&times;</button>
     <ul>
       <li *ngFor="let message of errorMessage">{{ message }}</li>
     </ul>
   </div>
 
   <div *ngIf="successMessage" class="success-popup">
-    <button class="close-popup" (click)="closeSuccessPopup()">×</button>
+    <button class="close-popup" (click)="closeSuccessPopup()">&times;</button>
     {{ successMessage }}
   </div>
 
-  <!-- <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div> -->
-  
 </div>

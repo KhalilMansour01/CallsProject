@@ -7,16 +7,20 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { AuthGuard } from './auth.guard';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+    private authGuard: AuthGuard
+  ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const token = this.authService.getToken();
 
+    // this.authGuard.canActivate();
     if (token) {
       request = request.clone({
         setHeaders: {

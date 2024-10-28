@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
     // Add your secret key here
-    private static final String SECRET_KEY = "CFC2A6BFBC7B4E460723959DB206D6D9E393FA78E8AAB88B6471007B97593320";
+    // private static final String SECRET_KEY = "9C8380FBD615FC93C9A2FF197191ED35C0EB93B64B41A6A89E4D906D848BDAA4";
+    private static final String SECRET_KEY = Base64.getEncoder().encodeToString("9C8380FBD615FC93C9A2FF197191ED35C0EB93B64B41A6A89E4D906D848BDAA4".getBytes());
+
 
     private static final long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(30);
 
@@ -34,7 +36,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(userDetails.getUsername())
+                .subject(userDetails.getUsername()) 
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusMillis(EXPIRATION_TIME)))
                 .signWith(generateKey())

@@ -42,15 +42,23 @@
         <option value="SW">SW: Software Maintenance</option>
       </select>
     </div>
+
+    <div class="form-row-check">
+      <label for="status"><input type="checkbox" id="status" [(ngModel)]="staff.status" name="status"/>
+        Status</label>
+    </div>
+
     <div class="actions">
       <button type="submit">Save</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button (click)="goBack()" class="btn btn-secondary">Cancel</button>
     </div>
   </form>
   <!-- Success and fail message alert -->
-  <div *ngIf="successMessage" class="alert alert-success">
+  <div *ngIf="successMessage" class="success-popup">
+    <button class="close-popup" (click)="closeSuccessPopup()">&times;</button>
     {{ successMessage }}
   </div>
+
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>

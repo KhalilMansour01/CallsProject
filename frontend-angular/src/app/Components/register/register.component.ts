@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Authentication/auth.service';
+import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-register',
@@ -10,7 +14,9 @@ import { AuthService } from 'src/app/Authentication/auth.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
-  errorMessage: string;
+  // errorMessage: string;
+  errorMessage: string | null = null;
+
 
   constructor(
     private fb: FormBuilder,
@@ -19,15 +25,18 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      username: ['', Validators.required],
+      username: ['', [Validators.required], [this.usernameExistsValidator.bind(this)]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      // email: ['', Validators.required],
+
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       telephone: ['', Validators.required],
       role: ['ADMIN', Validators.required]
-    }, { validator: this.passwordsMatchValidator });
+    },
+      { validator: this.passwordsMatchValidator});
 
     this.registerForm.valueChanges.subscribe(() => {
       this.errorMessage = '';
@@ -36,7 +45,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
-      this.errorMessage = 'Please fill all required fields correctly!';
+      this.errorMessage = 'Please fill all required fields!';
       return;
     }
 
@@ -59,6 +68,20 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+
+
+  usernameExistsValidator(control: AbstractControl) {
+    const username = control.value;
+    if (!username) {
+      return of(null);
+    }
+
+    return this.authService.isUsernameTaken(username).pipe(
+      map(exists => exists ? { usernameExists: true } : null),
+      catchError(() => of(null))
+    );
+  }
+
   passwordsMatchValidator(control: AbstractControl) {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
@@ -68,4 +91,11 @@ export class RegisterComponent implements OnInit {
   get username() { return this.registerForm.get('username'); }
   get password() { return this.registerForm.get('password'); }
   get confirmPassword() { return this.registerForm.get('confirmPassword'); }
+  get firstName() { return this.registerForm.get('firstName'); }
+  get lastName() { return this.registerForm.get('lastName'); }
+  get email() { return this.registerForm.get('email'); }
+
+  closeErrorPopup() {
+    this.errorMessage = null;
+  }
 }

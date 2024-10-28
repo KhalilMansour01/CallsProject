@@ -1,12 +1,17 @@
 <nav class="navbar navbar-expand navbar-custom">
   <div class="container">
 
-    <a class="navbar-brand" routerLink="/admin-dashboard">
+    <a class="navbar-brand">
       Calls System
     </a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mx-auto">
 
+        <li class="nav-item" *ngIf="isAuthenticated()">
+          <a class="nav-link" routerLink="/admin-dashboard">
+            <i class="fas fa-home"></i> Home
+          </a>
+        </li>
         <li class="nav-item" *ngIf="isAuthenticated()">
           <a class="nav-link" routerLink="/calls/list">
             <i class="fas fa-database"></i> Calls

@@ -29,6 +29,7 @@ export class EditStaffComponent implements OnInit {
   onSubmit() {
     this.successMessage = null;
     this.errorMessage = null;
+
     this.staffService.updateStaff(this.staff).subscribe({
       next: () => {
         this.successMessage = 'Staff updated successfully!';
@@ -61,5 +62,8 @@ export class EditStaffComponent implements OnInit {
     this.router.navigate([`/staff/view/${this.staff.id}`]);
   }
 
+  closeSuccessPopup() {
+    this.successMessage = null;
+  }
 
 }

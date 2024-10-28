@@ -19,7 +19,7 @@ public class StaffSpecifications {
     public static Specification<StaffEntity> searchByMultipleFields(String searchQuery){
         return (root, query, criteriaBuilder) -> {
             if (searchQuery == null || searchQuery.isEmpty()) {
-                return criteriaBuilder.conjunction(); // Return true if no search query
+                return criteriaBuilder.conjunction();
             }
 
             String lowerSearchQuery = searchQuery.toLowerCase();
@@ -37,6 +37,26 @@ public class StaffSpecifications {
                 middleNamePredicate,
                 lastNamePredicate,
                 titlePredicate
+               );
+        };
+    }
+
+    public static Specification<StaffEntity> searchByName(String searchQuery){
+        return (root, query, criteriaBuilder) -> {
+            if (searchQuery == null || searchQuery.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+
+            String lowerSearchQuery = searchQuery.toLowerCase();
+
+            Predicate firstNamePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + lowerSearchQuery + "%");
+            Predicate middleNamePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("middleName")), "%" + lowerSearchQuery + "%");
+            Predicate lastNamePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + lowerSearchQuery + "%");
+
+            return criteriaBuilder.or(
+                firstNamePredicate, 
+                middleNamePredicate,
+                lastNamePredicate
                );
         };
     }

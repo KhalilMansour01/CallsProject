@@ -65,4 +65,40 @@ export class StaffService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
   }
+
+  // Advanced get staff with pagination
+  getPaginatedStaff(
+    pageNumber: number,
+    pageSize: number,
+    sortField: string = 'id',  
+    sortDirection: 'asc' | 'desc' = 'asc',  
+    searchQuery?: string,
+    dptCode?: string
+  ): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.set('page', pageNumber.toString());
+    params = params.set('size', pageSize.toString());
+    params = params.set('sortField', sortField);
+    params = params.set('sortDirection', sortDirection);
+
+    if (dptCode) {
+      params = params.set('dptCode', dptCode);
+    }
+
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/advancedGet`, { params });
+  }
+
+  // Search staff by name
+  searchByName(searchQuery: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/searchByName`, { params });
+  }
 }

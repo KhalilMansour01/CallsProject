@@ -2,14 +2,20 @@ package com.example.backend.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.Entity.CallsEntity;
+import com.example.backend.Entity.CustomerEntity;
+import com.example.backend.Entity.StaffEntity;
 import com.example.backend.Exceptions.DuplicateIdException;
 import com.example.backend.Exceptions.MissingValueException;
 import com.example.backend.Exceptions.ResourceNotFoundException;
@@ -20,6 +26,12 @@ import com.example.backend.Specifications.CallsSpecification;
 public class CallsService {
     @Autowired
     CallsRepository callsRepository;
+
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    StaffService staffService;
 
     // GET ALL CALLS
     public List<CallsEntity> getAllCalls() {
@@ -50,6 +62,16 @@ public class CallsService {
         if (callsEntity.getId() == null) {
             errorMessages.append("- ID\n");
             missingFields = true;
+        } else {
+            String idString = callsEntity.getId().toPlainString();
+            if (idString.length() > 10) {
+                errorMessages.append("- ID must be 10 digits or fewer\n");
+                missingFields = true;
+            }
+            if (callsEntity.getId().compareTo(BigDecimal.ZERO) <= 0) {
+                errorMessages.append("- ID must be greater than zero\n");
+                missingFields = true;
+            }
         }
         if (callsEntity.getCCode() == null) {
             errorMessages.append("- Client ID\n");
@@ -64,8 +86,13 @@ public class CallsService {
             missingFields = true;
         }
         if (callsEntity.getReqTime() == null) {
-            errorMessages.append("- Request Time");
+            errorMessages.append("- Request Time\n");
             missingFields = true;
+        } else {
+            if (callsEntity.getReqDate().isAfter(LocalDate.now())) {
+                errorMessages.append("- Request Date cannot be in the future");
+                missingFields = true;
+            }
         }
 
         if (missingFields) {
@@ -84,7 +111,7 @@ public class CallsService {
     }
 
     // UPDATE CALLS
-    public ResponseEntity<CallsEntity> updateCalls(BigDecimal id, CallsEntity callsEntity)
+    public ResponseEntity<CallsEntity> updateCalls(BigDecimal id, CallsEntity entity)
             throws ResourceNotFoundException {
         CallsEntity existingCalls = callsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No calls record exist for given id : " + id));
@@ -95,43 +122,82 @@ public class CallsService {
 
             boolean missingFields = false;
 
-            if (callsEntity.getRespDate() == null) {
+            // Check for missing fields
+            // Response Date not null
+            if (entity.getRespDate() == null) {
                 errorMessages.append("- Response Date\n");
                 missingFields = true;
+            } else {
+                if (entity.getRespDate().isAfter(LocalDate.now())) {
+                    errorMessages.append("- Response Date cannot be in the future\n");
+                    missingFields = true;
+                }
+                if (entity.getRespDate().isBefore(existingCalls.getReqDate())) {
+                    errorMessages.append("- Response Date cannot be before Request Date\n");
+                    missingFields = true;
+                }
             }
-            if (callsEntity.getRespTime() == null) {
+
+            // Response Time not null
+            if (entity.getRespTime() == null) {
                 errorMessages.append("- Response Time\n");
                 missingFields = true;
             }
-            if (callsEntity.getTimeArrive() == null) {
+            // Time Arrived not null
+            if (entity.getTimeArrive() == null) {
                 errorMessages.append("- Time Arrived\n");
                 missingFields = true;
+            } else {
+                if (entity.getTimeArrive().isBefore(entity.getRespTime()) && entity.getRespTime() != null) {
+                    errorMessages.append("- Time Arrived cannot be before Response Time\n");
+                    missingFields = true;
+                }
             }
-            if (callsEntity.getTimeLeft() == null) {
-                errorMessages.append("- Time Left");
+            // // Time Arrived cannot be before Response Time
+            // if (entity.getTimeArrive() != null
+            // && entity.getRespTime() != null
+            // && entity.getTimeArrive().isBefore(entity.getRespTime())) {
+            // errorMessages.append("- Time Arrived cannot be before Response Time\n");
+            // missingFields = true;
+            // }
+            // Time Left not null
+            if (entity.getTimeLeft() == null) {
+                errorMessages.append("- Time Left\n");
                 missingFields = true;
+            } else {
+                if (entity.getTimeLeft().isBefore(entity.getTimeArrive()) && entity.getTimeArrive() != null) {
+                    errorMessages.append("- Time Left cannot be before Time Arrived\n");
+                    missingFields = true;
+                }
             }
+            // // Time Left cannot be before Time Arrived
+            // if (entity.getTimeLeft() != null
+            // && entity.getTimeArrive() != null
+            // && entity.getTimeLeft().isBefore(entity.getTimeArrive())) {
+            // errorMessages.append("- Time Left cannot be before Time Arrived\n");
+            // missingFields = true;
+            // }
 
             if (missingFields) {
                 throw new MissingValueException(errorMessages.toString().trim());
             }
 
-            existingCalls.setRespDate(callsEntity.getRespDate());
-            existingCalls.setRespTime(callsEntity.getRespTime());
-            existingCalls.setTimeArrive(callsEntity.getTimeArrive());
-            existingCalls.setTimeLeft(callsEntity.getTimeLeft());
+            existingCalls.setRespDate(entity.getRespDate());
+            existingCalls.setRespTime(entity.getRespTime());
+            existingCalls.setTimeArrive(entity.getTimeArrive());
+            existingCalls.setTimeLeft(entity.getTimeLeft());
 
-            if (callsEntity.getActRem1() != null) {
-                existingCalls.setActRem1(callsEntity.getActRem1());
+            if (entity.getActRem1() != null) {
+                existingCalls.setActRem1(entity.getActRem1());
             }
-            if (callsEntity.getActRem2() != null) {
-                existingCalls.setActRem2(callsEntity.getActRem2());
+            if (entity.getActRem2() != null) {
+                existingCalls.setActRem2(entity.getActRem2());
             }
-            if (callsEntity.getActRem3() != null) {
-                existingCalls.setActRem3(callsEntity.getActRem3());
+            if (entity.getActRem3() != null) {
+                existingCalls.setActRem3(entity.getActRem3());
             }
-            if (callsEntity.getActRem4() != null) {
-                existingCalls.setActRem4(callsEntity.getActRem4());
+            if (entity.getActRem4() != null) {
+                existingCalls.setActRem4(entity.getActRem4());
             }
         }
 
@@ -148,31 +214,63 @@ public class CallsService {
         return ResponseEntity.ok().build();
     }
 
-    // FILTER CALLS
-    public List<CallsEntity> filterCalls(String fCat, Boolean open) {
-        Specification<CallsEntity> spec = Specification.where(CallsSpecification.hasCategory(fCat))
-                .and(CallsSpecification.isOpen(open));
-        return callsRepository.findAll(spec);
-    }
+    /*
+     * Advanced search with pagination
+     */
+    public Page<CallsEntity> paginatedCalls(
+            Pageable pageable,
+            String fCat,
+            Boolean open,
+            String searchQuery) {
 
-    // SEARCH CALLS
-    public List<CallsEntity> searchCalls(String searchQuery) {
-        Specification<CallsEntity> spec = CallsSpecification.searchByMultipleFields(searchQuery);
-        return callsRepository.findAll(spec);
-    }
-
-    // FILTER AND SEARCH CALLS
-    public List<CallsEntity> filterAndSearchCalls(String fCat, Boolean open, String searchQuery) {
-
+        // Start with category filter if provided
         Specification<CallsEntity> spec = Specification
-                .where(CallsSpecification.hasCategory(fCat))
-                .and(CallsSpecification.searchByMultipleFields(searchQuery));
+                .where(CallsSpecification.hasCategory(fCat));
 
-        // Only apply the 'open' filter if it is explicitly provided
+        // Process the search query if provided
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            searchQuery = searchQuery.trim();
+            // Step 1: Search for staff and customers by name
+            List<CustomerEntity> customers = customerService.searchByName(searchQuery);
+            List<StaffEntity> staff = staffService.searchByName(searchQuery);
+
+            // Step 2: Extract IDs from found staff and customers
+            List<BigDecimal> customerIds = customers.stream()
+                    .map(CustomerEntity::getId)
+                    .collect(Collectors.toList());
+
+            List<BigDecimal> staffIds = staff.stream()
+                    .map(StaffEntity::getId)
+                    .collect(Collectors.toList());
+
+            // Step 3: Build the predicates
+            Specification<CallsEntity> idSpec = null;
+            if (!customerIds.isEmpty()) {
+                idSpec = CallsSpecification.hasCustomerIds(customerIds);
+            }
+
+            if (!staffIds.isEmpty()) {
+                Specification<CallsEntity> staffIdSpec = CallsSpecification.hasStaffIds(staffIds);
+                idSpec = idSpec == null ? staffIdSpec : idSpec.or(staffIdSpec);
+            }
+
+            // Step 4: Add the search query for CallsEntity fields
+            Specification<CallsEntity> searchSpec = CallsSpecification.searchByMultipleFields(searchQuery);
+
+            // Combine the searchSpec and idSpec (if exists) using or
+            if (idSpec != null) {
+                spec = spec.and(searchSpec.or(idSpec));
+            } else {
+                spec = spec.and(searchSpec); // Only apply the search query if no IDs are found
+            }
+        }
+
+        // Apply the "open" filter if provided
         if (open != null) {
             spec = spec.and(CallsSpecification.isOpen(open));
         }
 
-        return callsRepository.findAll(spec);
+        return callsRepository.findAll(spec, pageable);
     }
+
 }

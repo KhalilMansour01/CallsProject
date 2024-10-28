@@ -7,6 +7,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
   margin-top: 2%;
+  position: relative;
 }
 
 .client-form h2 {
@@ -21,25 +22,18 @@
   justify-content: space-between;
 }
 
-.client-form div {
-  margin-bottom: 8px;
-}
-
 .client-form label {
   display: block;
   font-weight: bold;
   color: #555;
 }
 
-.client-form input {
-  width: 100%;
+.client-form p {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 16px;
   background-color: #e9ecef;
-
+  font-size: 16px;
 }
 
 .form-row {
@@ -70,26 +64,16 @@
   font-weight: bold;
 }
 
-.form-row-check input[type="checkbox"] {
-  margin-right: 10px;
-  /* Adjust spacing between checkbox and label text */
-  vertical-align: middle;
-}
-
 #vatCash,
 #vatStatus {
   width: min-content;
   margin-left: 5px;
 }
 
-label {
-  white-space: nowrap;
-  margin: 0;
-}
+
 
 #id {
   width: 20%;
-  text-align: center;
 }
 
 .form-group {
@@ -99,4 +83,21 @@ label {
 
 .actions {
   margin-top: 15px;
+}
+
+.form-group1 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-left: 5px;
+}
+
+.form-group1 label {
+  font-weight: bold;
+  color: #333;
+  margin-right: 8px; 
+}
+
+.form-group1 .value {
+  font-weight: normal;
 }

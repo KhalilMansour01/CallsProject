@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.example.backend.Entity.StaffEntity;
 import com.example.backend.Repository.StaffRepository;
@@ -52,7 +54,18 @@ public class StaffService {
         if (entity.getId() == null) {
             errorMessages.append("- ID\n");
             missingFields = true;
+        } else {
+            String idString = entity.getId().toPlainString();
+            if (idString.length() > 3) {
+                errorMessages.append("- ID must be 3 digits or fewer\n");
+                missingFields = true;
+            }
+            if (entity.getId().compareTo(BigDecimal.ZERO) <= 0) {
+                errorMessages.append("- ID must be greater than zero\n");
+                missingFields = true;
+            }
         }
+
         if (entity.getCvlCode() == null) {
             errorMessages.append("- Civil code\n");
             missingFields = true;
@@ -75,41 +88,6 @@ public class StaffService {
             StaffEntity savedEntity = staffRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
         }
-    }
-
-    // CREATE STAFF 1 (ALTERNATIVE)
-    public ResponseEntity<?> createStaff1(StaffEntity entity) {
-        Map<String, String> errors = new HashMap<>();
-
-        if (entity.getId() == null) {
-            errors.put("id", "Id is required.");
-        }
-        if (entity.getCvlCode() == null) {
-            errors.put("cvlCode", "Civil code is required.");
-        }
-        if (entity.getDptCode() == null) {
-            errors.put("dptCode", "Department is required.");
-        }
-        if (entity.getFirstName() == null || entity.getFirstName().trim().isEmpty()) {
-            errors.put("firstName", "First name is required.");
-        }
-        if (entity.getLastName() == null || entity.getLastName().trim().isEmpty()) {
-            errors.put("lastName", "Last name is required.");
-        }
-
-        if (!errors.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-
-        boolean exists = staffRepository.existsById(entity.getId());
-
-        if (exists) {
-            errors.put("id", "A staff record exists for Id: " + entity.getId());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-
-        StaffEntity savedEntity = staffRepository.save(entity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEntity);
     }
 
     // UPDATE STAFF
@@ -135,6 +113,7 @@ public class StaffService {
         if (entity.getDptCode() != null) {
             existingStaff.setDptCode(entity.getDptCode());
         }
+        existingStaff.setStatus(entity.getStatus());
 
         final StaffEntity updatedStaff = staffRepository.save(existingStaff);
         return ResponseEntity.ok(updatedStaff);
@@ -168,6 +147,25 @@ public class StaffService {
                 .where(StaffSpecifications.hasDepartment(dptCode))
                 .and(StaffSpecifications.searchByMultipleFields(searchQuery));
 
+        return staffRepository.findAll(spec);
+    }
+
+    /*
+     * Advanced search with pagination
+     */
+    public Page<StaffEntity> paginatedStaff(Pageable pageable, String dptCode, String searchQuery) {
+        Specification<StaffEntity> spec = Specification
+                .where(StaffSpecifications.hasDepartment(dptCode))
+                .and(StaffSpecifications.searchByMultipleFields(searchQuery));
+
+        return staffRepository.findAll(spec, pageable);
+    }
+
+    /*
+     * Search by name
+     */
+    public List<StaffEntity> searchByName(String searchQuery) {
+        Specification<StaffEntity> spec = StaffSpecifications.searchByName(searchQuery);
         return staffRepository.findAll(spec);
     }
 }

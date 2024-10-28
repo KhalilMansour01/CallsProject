@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.*;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -15,7 +16,6 @@ public class CallsEntity {
     @Column(name = "call_no")
     private BigDecimal id;
 
-    
     @Column(name = "c_code", nullable = false)
     @NotNull(message = "Client Id required")
     private BigDecimal cCode;
@@ -24,34 +24,31 @@ public class CallsEntity {
     private BigDecimal eCode;
 
     @Column(name = "req_date", nullable = false)
-    private Date reqDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate reqDate;
 
     @Column(name = " req_time", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime reqTime;
 
-    @Column(name = "rp_code")
-    private BigDecimal rpCode;
-
     @Column(name = "resp_date")
-    private Date respDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate respDate;
 
     @Column(name = "resp_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime respTime;
 
     @Column(name = "time_arrive")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timeArrive;
 
     @Column(name = "time_left")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timeLeft;
-
-    @Column(name = "susp_flag")
-    private String suspFlag;
 
     @Column(name = "f_cat")
     private String fCat;
-
-    @Column(name = "inv_no")
-    private Integer invNo;
 
     @Column(name = "rem1")
     private String rem1;
@@ -77,6 +74,16 @@ public class CallsEntity {
     @Column(name = "act_rem4")
     private String actRem4;
 
+    //Currently not used
+    @Column(name = "rp_code")
+    private BigDecimal rpCode;
+
+    @Column(name = "susp_flag")
+    private String suspFlag;
+
+    @Column(name = "inv_no")
+    private Integer invNo;
+
     public BigDecimal getId() {
         return id;
     }
@@ -101,11 +108,11 @@ public class CallsEntity {
         this.eCode = eCode;
     }
 
-    public Date getReqDate() {
+    public LocalDate getReqDate() {
         return reqDate;
     }
 
-    public void setReqDate(Date reqDate) {
+    public void setReqDate(LocalDate reqDate) {
         this.reqDate = reqDate;
     }
 
@@ -125,11 +132,11 @@ public class CallsEntity {
         this.rpCode = rpCode;
     }
 
-    public Date getRespDate() {
+    public LocalDate getRespDate() {
         return respDate;
     }
 
-    public void setRespDate(Date respDate) {
+    public void setRespDate(LocalDate respDate) {
         this.respDate = respDate;
     }
 

@@ -27,7 +27,7 @@
 		<div class="form-row">
 			<div class="form-group">
 				<label>Request Date:</label>
-				<p>{{ call.reqDate | date: 'dd/MM/yyyy' }}</p>
+				<p>{{ call.reqDate | date: 'yyyy-MM-dd' }}</p>
 			</div>
 			<div class="form-group">
 				<label>Request Time:</label>
@@ -38,64 +38,55 @@
 		<div class="form-row">
 			<div class="form-group">
 				<label>Response Date:</label>
-				<p>{{ call.respDate | date: 'dd/MM/yyyy' }}</p>
+				<p>{{ call.respDate ? (call.respDate | date: 'yyyy-MM-dd') : '-' }}</p>
 			</div>
 			<div class="form-group">
 				<label>Response Time:</label>
-				<p>{{ call.respTime }}</p>
+				<p>{{ call.respTime || '-' }}</p>
 			</div>
 		</div>
 
 		<div class="form-row">
 			<div class="form-group">
 				<label>Time Arrived:</label>
-				<p>{{ call.timeArrive }}</p>
+				<p>{{ call.timeArrive || '-' }}</p>
 			</div>
 			<div class="form-group">
 				<label>Time Left:</label>
-				<p>{{ call.timeLeft }}</p>
+				<p>{{ call.timeLeft || '-' }}</p>
 			</div>
 		</div>
 
-		<div>
+		<!-- Normal Remarks -->
+		<div class="form-group" *ngIf="(call.rem1 || call.rem2 || call.rem3 || call.rem4); else noNormalRemarks">
+			<label>Remarks:</label>
+			<ul>
+				<li *ngIf="call.rem1">{{ call.rem1 }}</li>
+				<li *ngIf="call.rem2">{{ call.rem2 }}</li>
+				<li *ngIf="call.rem3">{{ call.rem3 }}</li>
+				<li *ngIf="call.rem4">{{ call.rem4 }}</li>
+			</ul>
+		</div>
+		<ng-template #noNormalRemarks>
 			<div class="form-group">
-				<label>Remark 1:</label>
-				<p>{{ call.rem1 }}</p>
+			  <label>- No Remarks</label>
 			</div>
+			  </ng-template>
+		<!-- Additional Remarks -->
+		<div class="form-group" *ngIf="(call.actRem1 || call.actRem2 || call.actRem3 || call.actRem4); else noAdditionalRemarks">
+			<label>Additional Remarks:</label>
+			<ul>
+				<li *ngIf="call.actRem1">{{ call.actRem1 }}</li>
+				<li *ngIf="call.actRem2">{{ call.actRem2 }}</li>
+				<li *ngIf="call.actRem3">{{ call.actRem3 }}</li>
+				<li *ngIf="call.actRem4">{{ call.actRem4 }}</li>
+			</ul>
+		</div>
+		<ng-template #noAdditionalRemarks>
 			<div class="form-group">
-				<label>Remark 2:</label>
-				<p>{{ call.rem2 }}</p>
+			  <label>- No Additional Remarks</label>
 			</div>
-			<div class="form-group">
-				<label>Remark 3:</label>
-				<p>{{ call.rem3 }}</p>
-			</div>
-			<div class="form-group">
-				<label>Remark 4:</label>
-				<p>{{ call.rem4 }}</p>
-			</div>
-		</div>
-
-
-		<div>
-			<div class="form-group">
-			<label>Act Remark 1:</label>
-			<p>{{ call.actRem1 }}</p>
-		</div>
-		<div class="form-group">
-			<label>Act Remark 2:</label>
-			<p>{{ call.actRem2 }}</p>
-		</div>
-		<div class="form-group">
-			<label>Act Remark 3:</label>
-			<p>{{ call.actRem3 }}</p>
-		</div>
-		<div class="form-group">
-			<label>Act Remark 4:</label>
-			<p>{{ call.actRem4 }}</p>
-		</div>
-		</div>
-		
+			  </ng-template>
 
 		<div class="actions">
 			<button *ngIf="isCallOpen()" (click)="followUpCall()" class="btn btn-secondary">Follow Up</button>
@@ -105,7 +96,4 @@
 
 	</div>
 
-	<div *ngIf="errorMessage" class="alert alert-danger">
-		{{ errorMessage }}
-	</div>
 </div>

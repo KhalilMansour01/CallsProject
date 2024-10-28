@@ -70,6 +70,9 @@ export class FollowupCallComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.successMessage = null;
+    this.errorMessage = null;
+    
     this.callsService.updateCall(this.call).subscribe({
       next: () => {
         this.successMessage = 'Call updated successfully';

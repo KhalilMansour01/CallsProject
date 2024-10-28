@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { jwtDecode } from "jwt-decode";
 import { Admin } from './admin.model';
 
@@ -47,10 +46,7 @@ export class AuthService {
 
   //CHECK IF USERNAME IS TAKEN
   isUsernameTaken(username: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.BASE_URL}/checkIfExist/${username}`)
-      .pipe(
-        map(response => response.exists)
-      );
+    return this.http.get<boolean>(`${this.BASE_URL}/checkIfExist/${username}`);
   }
 
   //CHECK IF USER IS ADMIN

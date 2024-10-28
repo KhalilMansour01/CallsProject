@@ -26,14 +26,14 @@
     <table class="call-table">
       <tr>
         <th>Request Date:</th>
-        <td>{{ callDetails.reqDate | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ callDetails.reqDate | date: 'yyyy-MM-dd' }}</td>
         <th>Request Time:</th>
         <td>{{ callDetails.reqTime }}</td>
       </tr>
   
       <tr>
         <th>Response Date:</th>
-        <td>{{ callDetails.respDate}}</td>
+        <td>{{ callDetails.respDate | date: 'yyyy-MM-dd'}}</td>
         <th>Response Time:</th>
         <td>{{ callDetails.respTime}}</td>
       </tr>

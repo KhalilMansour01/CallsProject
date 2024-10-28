@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ClientsService } from 'src/app/Services/clients.service';
 import { Router } from '@angular/router';
 
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 @Component({
   selector: 'app-list-clients',
   templateUrl: './list-clients.component.html',
@@ -9,12 +12,22 @@ import { Router } from '@angular/router';
 })
 export class ListClientsComponent implements OnInit {
 
-  clientsList: any[] = [];
-
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
+  clientsList: any[] = [];
   searchQuery: string = '';
+  selectedCountry: string | null = '';
+  selectedRegion: string | null = '';
+
+  currentPage: number = 0;
+  pageSize: number = 10;
+
+  totalPages: number = 1;
+  totalRecords: number = 0;
+
+  sortField: string = 'id';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   countryMap: { [key: string]: string } = {
     '': 'All Countries',
@@ -37,9 +50,6 @@ export class ListClientsComponent implements OnInit {
     '422': 'LEBANON'
   };
 
-  countryKeys: string[] = Object.keys(this.countryMap);
-  selectedCountry: string | null = '';
-
   regionMap: { [key: string]: string } = {
     '': 'All Regions',
     'BKA': 'BEKAA VALLEY',
@@ -55,8 +65,11 @@ export class ListClientsComponent implements OnInit {
     'WTB': 'WEST BEIRUT'
   };
 
-  regionKeys: string[] = Object.keys(this.regionMap);
-  selectedRegion: string | null = '';
+  countryKeys: string[] = [''].concat(Object.keys(this.countryMap).filter(key => key !== ''));
+  regionKeys: string[] = [''].concat(Object.keys(this.regionMap).filter(key => key !== ''));
+
+  private searchSubject = new Subject<string>();
+  private pageSizeSubject = new Subject<number>();
 
   constructor(
     private router: Router,
@@ -65,48 +78,67 @@ export class ListClientsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadClients();
+
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((query) => {
+        this.searchQuery = query;
+        this.onSearch();
+      });
+
+    this.pageSizeSubject.pipe(
+      debounceTime(500)
+    ).subscribe(size => {
+      this.changePageSize(size);
+    });
   }
 
+  // Load clients data
   loadClients(): void {
-    if (this.searchQuery || this.selectedCountry || this.selectedRegion) {
-      console.log('selectedCountry:', this.selectedCountry);
-
-      this.clientsService.filterAndSearchClients(
-        this.selectedRegion,
-        this.selectedCountry,
-        this.searchQuery
-      ).subscribe(
-        (data) => {
-          this.clientsList = data;
-        },
-        (error) => {
-          console.error('Error fetching customer data:', error);
-        }
-      );
-    } else {
-      this.clientsService.getClients().subscribe(
-        (data) => {
-          this.clientsList = data;
-        },
-        (error) => {
-          console.error('Error fetching clients data:', error);
-        }
-      );
-    }
+    this.clientsService.getPaginatedClients(
+      this.currentPage,
+      this.pageSize,
+      this.sortField,
+      this.sortDirection,
+      this.searchQuery,
+      this.selectedRegion,
+      this.selectedCountry
+    ).subscribe(
+      (data) => {
+        console.log('Clients data:', data);
+        this.clientsList = data.content;
+        this.totalPages = data.totalPages;
+        this.totalRecords = data.totalElements;
+        console.log('Total pages:', this.totalPages);
+      },
+      (error) => {
+        console.error('Error fetching clients data:', error);
+      }
+    );
   }
 
+  onSearchInputChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageSizeChange(value: number): void {
+    this.pageSizeSubject.next(value);
+  }
+
+  // Navigate to add client page
   addClient() {
     this.router.navigate(['/clients/add']);
   }
 
-  editClient(client: any) {
+  // Navigate to view client page
+  viewClient(client: any) {
     if (client.id) {
-      this.router.navigate([`/clients/edit/${client.id}`]);
+      this.router.navigate([`/clients/view/${client.id}`]);
     } else {
       console.error('Client ID is undefined');
     }
   }
 
+  // Delete client record
   deleteClient(clientId: number) {
     this.clientsService.deleteClient(clientId).subscribe(
       (data) => {
@@ -119,19 +151,105 @@ export class ListClientsComponent implements OnInit {
     this.clientsList = this.clientsList.filter(client => client.id !== clientId);
   }
 
-  viewClient(client: any) {
-    if (client.id) {
-      this.router.navigate([`/clients/view/${client.id}`]);
-    } else {
-      console.error('Client ID is undefined');
-    }
-  }
-
+  // Confirm delete client record
   confirmDelete(clientId: number) {
     const confirmation = confirm('Are you sure you want to delete this client record?');
     if (confirmation) {
       this.deleteClient(clientId);
     }
+  }
+
+  // Search clients 
+  onSearch(): void {
+    console.log('searchQuery:', this.searchQuery);
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  // Clear search query
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.loadClients();
+  }
+
+  // Apply Region filter
+  applyRegionFilter(newRegion: string): void {
+    console.log('selectedRegion:', this.selectedRegion);
+    this.selectedRegion = newRegion;
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  // Apply Country filter
+  applyCountryFilter(newCountry: string): void {
+    console.log('selectedCountry:', this.selectedCountry);
+    this.selectedCountry = newCountry;
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  // Clear filters
+  resetFilters(): void {
+    this.searchQuery = '';
+    this.selectedRegion = '';
+    this.selectedCountry = '';
+    this.currentPage = 0;
+    this.pageSize = 10;
+    this.sortDirection = 'asc';
+    this.loadClients();
+  }
+
+  // Go to next page
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadClients();
+    }
+  }
+
+  // Go to previous page
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadClients();
+    }
+  }
+
+  // Go to first page
+  firstPage(): void {
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  // Go to last page
+  lastPage(): void {
+    this.currentPage = this.totalPages - 1;
+    this.loadClients();
+  }
+
+  // Change sorting field
+  changeSorting(field: string): void {
+    this.sortField = field;
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  // Toggle sorting direction
+  toggleSortDirection() {
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  changePageSize(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 0;
+    this.loadClients();
+  }
+
+  ngOnDestroy(): void {
+    this.pageSizeSubject.unsubscribe();
+    this.searchSubject.unsubscribe();
   }
 
   getCivilName(cvlCode: number): string {
@@ -153,27 +271,5 @@ export class ListClientsComponent implements OnInit {
 
   getRegionName(code: string | null): string {
     return this.regionMap[code || ''] || 'Unknown';
-  }
-
-  applyRegionFilter(newRegion: string): void {
-    console.log('selectedRegion:', this.selectedRegion);
-    this.selectedRegion = newRegion;
-    this.loadClients();
-  }
-  applyCountryFilter(newCountry: string): void {
-    console.log('selectedCountry:', this.selectedCountry);
-    this.selectedCountry = newCountry;
-    this.loadClients();
-  }
-
-  clearFilters(): void {
-    this.selectedRegion = '';
-    this.selectedCountry = '';
-    this.loadClients();
-  }
-
-  onSearch(): void {
-    console.log('searchQuery:', this.searchQuery);
-    this.loadClients();
   }
 }

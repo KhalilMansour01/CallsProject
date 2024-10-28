@@ -5,7 +5,7 @@
     <div class="form-row">
       <div class="form-group">
         <label for="id">ID:</label>
-        <input type="text" id="id" required [(ngModel)]="call.id" name="id" #id="ngModel" />
+        <input type="number" id="id" required [(ngModel)]="call.id" name="id" #id="ngModel" />
       </div>
   
       <div class="form-group">
@@ -53,11 +53,14 @@
 
 
     <div class="form-group">
-      <label for="rem1">Remark 1:</label>
+      <label for="rem1">Remarks:</label>
       <input type="text" id="rem1" required [(ngModel)]="call.rem1" name="rem1" />
+      <input type="text" id="rem2" [(ngModel)]="call.rem2" name="rem2" />
+      <input type="text" id="rem3" [(ngModel)]="call.rem3" name="rem3" />
+      <input type="text" id="rem4" [(ngModel)]="call.rem4" name="rem4" />
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label for="rem2">Remark 2:</label>
       <input type="text" id="rem2" [(ngModel)]="call.rem2" name="rem2" />
     </div>
@@ -70,30 +73,25 @@
     <div class="form-group">
       <label for="rem4">Remark 4:</label>
       <input type="text" id="rem4" [(ngModel)]="call.rem4" name="rem4" />
-    </div>
+    </div> -->
 
     <div class="actions">
-
-      <button type="submit" class="btn btn-secondary">Add & Print</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button type="submit" class="btn btn-secondary">Add Call</button>
+      <button (click)="goBack()" class="btn btn-secondary">Cancel</button>
     </div>
 
   </form>
 
   <div *ngIf="errorMessage && errorMessage.length > 0" class="error-popup">
-    <button class="close-popup" (click)="closeErrorPopup()">×</button>
+    <button class="close-popup" (click)="closeErrorPopup()">&times;</button>
     <ul>
       <li *ngFor="let message of errorMessage">{{ message }}</li>
     </ul>
   </div>
 
   <div *ngIf="successMessage" class="success-popup">
-    <button class="close-popup" (click)="closeSuccessPopup()">×</button>
+    <button class="close-popup" (click)="closeSuccessPopup()">&times;</button>
     {{ successMessage }}
   </div>
-
-  <!-- <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div> -->
 
 </div>

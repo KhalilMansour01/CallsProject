@@ -1,77 +1,114 @@
-<div class="container">
-  <h2 class="page-title">Clients Dashboard</h2>
-  <div class="search-bar">
-    <input
-      type="text"
-      placeholder="Search Clients"
-      [(ngModel)]="searchQuery"
-      
-      (input)="onSearch()"
-    />
+<div class="container clients-container">
+  <div class="header-row">
+    <h2 class="page-title">Clients Dashboard</h2>
   </div>
 
-  <div class="filter-row">
-    <!-- Filter Options on the Left -->
-    <div class="filter-options">
-      <!-- Country Filter -->
-      <div class="filter-item">
-        <label for="countryFilter" class="filter-label">Country:</label>
-        <select id="countryFilter" [(ngModel)]="selectedCountry" (change)="applyCountryFilter($event.target.value)">
-          <option *ngFor="let key of countryKeys" [value]="key">{{ countryMap[key] }}</option>
-        </select>
-      </div>
-
-      <!-- Region Filter -->
-      <div class="filter-item">
-        <label for="regionFilter" class="filter-label">Region:</label>
-        <select id="regionFilter" [(ngModel)]="selectedRegion" (change)="applyRegionFilter($event.target.value)">
-          <option *ngFor="let key of regionKeys" [value]="key">{{ regionMap[key] }}</option>
-        </select>
-      </div>
-
-      <!-- Clear Filters Button -->
-      <button (click)="clearFilters()" class="btn btn-clear">Clear Filters</button>
-
+  <div class="search-filter-row">
+    <div class="search-bar">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search Clients by ID, Name, Telephone, Fax, Email, Contact"
+        [(ngModel)]="searchQuery" (ngModelChange)="onSearchInputChange($event)" (input)="onSearch()"
+        class="search-input" />
+      <button *ngIf="searchQuery" class="clear-button" (click)="clearSearch()">×</button>
+      <button (click)="addClient()" class="btn btn-add">Add Client</button>
     </div>
-    <!-- Add Client Button on the Right -->
-    <button (click)="addClient()" class="btn btn-add">Add Client</button>
+
+    <div class="filter-options">
+      <button (click)="resetFilters()" class="btn btn-clear"><i class="fas fa-undo"></i></button>
+      <select id="countryFilter" [(ngModel)]="selectedCountry" (change)="applyCountryFilter($event.target.value)">
+        <option *ngFor="let key of countryKeys" [value]="key">{{ countryMap[key] }}</option>
+      </select>
+      <select id="regionFilter" [(ngModel)]="selectedRegion" (change)="applyRegionFilter($event.target.value)">
+        <option *ngFor="let key of regionKeys" [value]="key">{{ regionMap[key] }}</option>
+      </select>
+    </div>
+
+    <div class="sort-options">
+      <span>Sort By:</span>
+      <select [(ngModel)]="sortField" (change)="changeSorting(sortField)">
+        <option value="id">ID</option>
+        <option value="custName">Name</option>
+        <option value="regCode">Region</option>
+        <option value="cntrCode">Country</option>
+      </select>
+
+      <div class="sort-container">
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'asc'}"
+          name="Ascending">
+          <i class="fas fa-sort-up"></i>
+        </button>
+        <button (click)="toggleSortDirection()" class="sort-button" [ngClass]="{'active': sortDirection === 'desc'}"
+          name="Descending">
+          <i class="fas fa-sort-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pagination-controls">
+      <div class="total-records">Total Current Records: {{ totalRecords }}</div>
+    
+      <div class="pagination-buttons">
+        <button (click)="firstPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button (click)="previousPage()" [disabled]="currentPage === 0" class="arrow-button">
+          <i class="fas fa-angle-left"></i>
+        </button>
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-right"></i>
+        </button>
+        <button (click)="lastPage()" [disabled]="currentPage === totalPages - 1" class="arrow-button">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+
+      <div class="records-per-page">
+        <span class="page-size-span">Records per page:</span>
+        <input type="number" [(ngModel)]="pageSize" (input)="onPageSizeChange($event.target.value)" min="1" max="100"/>
+      </div>
+    </div>
   </div>
 
-  <table class="client-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Telephone</th>
-        <th>Region</th>
-        <th>Country</th>
-        <th>Contact</th>
-        <th>Email</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let client of clientsList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
-        <td>{{ client.id }}</td>
-        <td>{{ getCivilName(client.cvlCode) }} {{ client.custName }}</td>
-        <td>{{ client.tel1 }}</td>
-        <td>{{ getRegionName(client.regCode) }}</td>
-        <td>{{ getCountryName(client.cntrCode) }}</td>
-        <td>{{ client.contact }}</td>
-        <td>{{ client.email }}</td>
-        <td>
-          <div class="actions">
-            
-            <button (click)="viewClient(client)" class="btn-action" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button (click)="confirmDelete(client.id)" class="btn-action" title="Delete">
-              <i class="fas fa-trash"></i>
-            </button>
-            
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="clients-table-container">
+    <table class="client-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Telephone</th>
+          <th>Region</th>
+          <th>Country</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of clientsList; let i = index" [ngClass]="{'striped': i % 2 === 0}">
+          <td>{{ client.id }}</td>
+          <td>{{ getCivilName(client.cvlCode) }} {{ client.custName }}</td>
+          <td>{{ client.tel1 ? client.tel1 : '-' }}</td>
+          <td>{{ getRegionName(client.regCode) }}</td>
+          <td>{{ getCountryName(client.cntrCode) }}</td>
+          <td>{{ client.contact ? client.contact : '-' }}</td>
+          <td>{{ client.email ? client.email : '-' }}</td>
+          <td [ngClass]="{ 'status-open': client.status, 'status-closed': !client.status }">
+            {{ client.status ? 'Active' : 'Inactive' }}</td>
+          
+          <td>
+            <div class="actions">
+              <button (click)="viewClient(client)" class="btn-action" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <!-- <button (click)="confirmDelete(client.id)" class="btn-action" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button> -->
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

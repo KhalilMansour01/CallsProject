@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { StaffService } from 'src/app/Services/staff.service';
 import { Router } from '@angular/router';
 
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 @Component({
   selector: 'app-list-staff',
   templateUrl: './list-staff.component.html',
@@ -13,9 +16,18 @@ export class ListStaffComponent implements OnInit {
   errorMessage: string | null = null;
 
   staffList: any[] = [];
-  selectedDepartment: string | null = '';
   searchQuery: string = '';
+  selectedDepartment: string | null = '';
+  selectedStatus: string = '';
 
+  currentPage: number = 0;
+  pageSize: number = 10;
+
+  totalPages: number = 1;
+  totalRecords: number = 0;
+
+  sortField: string = 'id';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   departmentMap: { [key: string]: string } = {
     '': 'All Departments',
@@ -25,8 +37,10 @@ export class ListStaffComponent implements OnInit {
     'SW': 'Software Maintenance'
   };
 
-  // Create an array of keys for use in the template
-  departmentKeys: string[] = Object.keys(this.departmentMap);
+  departmentKeys: string[] = [''].concat(Object.keys(this.departmentMap).filter(key => key !== ''));
+
+  private searchSubject = new Subject<string>();
+  private pageSizeSubject = new Subject<number>();
 
   constructor(
     private router: Router,
@@ -35,71 +49,166 @@ export class ListStaffComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStaff();
+
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((query) => {
+        this.searchQuery = query;
+        this.onSearch();
+      });
+
+    this.pageSizeSubject.pipe(
+      debounceTime(500)
+    ).subscribe(size => {
+      this.changePageSize(size);
+    });
   }
 
   loadStaff(): void {
 
-    if (this.searchQuery || this.selectedDepartment) {
-      this.staffService.filterAndSearchStaff(this.selectedDepartment, this.searchQuery).subscribe(
-        (data) => {
-          this.staffList = data;
-        },
-        (error) => {
-          console.error('Error fetching staff data:', error);
-        }
-      );
-    } else {
-      this.staffService.getStaff().subscribe(
-        (data) => {
-          this.staffList = data;
-        },
-        (error) => {
-          console.error('Error fetching staff data:', error);
-        }
-      );
-    }
+    this.staffService.getPaginatedStaff(
+      this.currentPage,
+      this.pageSize,
+      this.sortField,
+      this.sortDirection,
+      this.searchQuery,
+      this.selectedDepartment
+    ).subscribe(
+      (data) => {
+        console.log('Staff data:', data);
+        this.staffList = data.content;
+        this.totalPages = data.totalPages;
+        this.totalRecords = data.totalElements;
+        console.log('Total pages:', this.totalPages);
+      },
+      (error) => {
+        console.error('Error fetching staff data:', error);
+      }
+    );
   }
 
+  onSearchInputChange(query: string): void {
+    this.searchSubject.next(query);
+  }
+
+  onPageSizeChange(value: number): void {
+    this.pageSizeSubject.next(value);
+  }
+
+  // Navigate to add staff page
   addStaff() {
     this.router.navigate(['/staff/add']);
   }
 
-  editStaff(staff: any) {
-    if (staff.id) {
-      this.router.navigate([`/staff/edit/${staff.id}`]);
-    } else {
-      console.error('Staff ID is undefined');
-    }
-  }
-
+  // Navigate to view staff page
   viewStaff(staff: any) {
-    if (staff.id) {
-      this.router.navigate([`/staff/view/${staff.id}`]);
-    } else {
-      console.error('Staff ID is undefined');
+    this.router.navigate([`/staff/view/${staff.id}`]);
+  }
+
+  // // Delete staff record
+  // deleteStaff(staffId: number) {
+  //   this.staffService.deleteStaff(staffId).subscribe(
+  //     (data) => {
+  //       console.log('Staff deleted successfully:', data);
+  //       this.successMessage = 'Staff deleted successfully';
+  //     },
+  //     (error) => {
+  //       console.error('Error deleting staff:', error);
+  //       this.successMessage = 'Error deleting staff';
+  //     }
+  //   );
+  //   this.staffList = this.staffList.filter(staff => staff.id !== staffId);
+  // }
+
+  // // Confirm delete staff record
+  // confirmDelete(staffId: number) {
+  //   const confirmation = confirm('Are you sure you want to delete this staff record?');
+  //   if (confirmation) {
+  //     this.deleteStaff(staffId);
+  //   }
+  // }
+
+  // Search staff
+  onSearch(): void {
+    console.log('searchQuery:', this.searchQuery);
+    this.currentPage = 0;
+    this.loadStaff();
+  }
+
+  // Clear search query
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.loadStaff();
+  }
+
+  // Apply Department filter
+  applyFilters(departmentCode: string): void {
+    console.log('selectedDepartment:', this.selectedDepartment);
+    this.selectedDepartment = departmentCode;
+    this.currentPage = 0;
+    this.loadStaff();
+  }
+
+  // Clear filters
+  resetFilters(): void {
+    this.searchQuery = '';
+    this.selectedDepartment = '';
+    this.currentPage = 0;
+    this.pageSize = 10;
+    this.sortDirection = 'asc';
+    this.loadStaff();
+  }
+
+  // go to next page
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      console.log('Next page:', this.currentPage);
+      this.loadStaff();
     }
   }
 
-  confirmDelete(staffId: number) {
-    const confirmation = confirm('Are you sure you want to delete this staff record?');
-    if (confirmation) {
-      this.deleteStaff(staffId);
+  // go to previous page
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      console.log('Previous page:', this.currentPage);
+      this.loadStaff();
     }
   }
 
-  deleteStaff(staffId: number) {
-    this.staffService.deleteStaff(staffId).subscribe(
-      (data) => {
-        console.log('Staff deleted successfully:', data);
-        this.successMessage = 'Staff deleted successfully';
-      },
-      (error) => {
-        console.error('Error deleting staff:', error);
-        this.successMessage = 'Error deleting staff';
-      }
-    );
-    this.staffList = this.staffList.filter(staff => staff.id !== staffId);
+  firstPage(): void {
+    this.currentPage = 0;
+    this.loadStaff();
   }
+  lastPage(): void {
+    this.currentPage = this.totalPages - 1;
+    this.loadStaff();
+  }
+
+  // change sorting field
+  changeSorting(field: string): void {
+    this.sortField = field;
+    this.currentPage = 0;
+    this.loadStaff();
+  }
+
+  toggleSortDirection() {
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.currentPage = 0;
+    this.loadStaff();
+  }
+
+  changePageSize(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 0;
+    this.loadStaff();
+  }
+
+  ngOnDestroy(): void {
+    this.pageSizeSubject.unsubscribe();
+    this.searchSubject.unsubscribe();
+  }
+
 
   getCivilName(cvlCode: number): string {
     switch (cvlCode) {
@@ -117,21 +226,4 @@ export class ListStaffComponent implements OnInit {
   getDepartmentName(code: string | null): string {
     return this.departmentMap[code || ''] || 'Unknown';
   }
-
-  applyFilters(departmentCode: string): void {
-    console.log('selectedDepartment:', this.selectedDepartment);
-    this.selectedDepartment = departmentCode === '' ? '' : departmentCode;
-    this.loadStaff();
-  }
-
-  clearFilters(): void {
-    this.selectedDepartment = '';
-    this.loadStaff();
-  }
-
-  onSearch(): void {
-    console.log('searchQuery:', this.searchQuery);
-    this.loadStaff();
-  }
-
 }

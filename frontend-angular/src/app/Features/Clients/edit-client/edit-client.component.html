@@ -6,7 +6,6 @@
     <div class="form-group">
       <label for="id">ID:</label>
       <input type="number" id="id" required [(ngModel)]="client.id" name="id" #id="ngModel" readonly />
-
     </div>
 
     <div class="form-row">
@@ -97,26 +96,33 @@
     </div>
 
     <div class="form-row-check">
-      <label for="vatStatus"><input type="checkbox" id="vatStatus" [(ngModel)]="client.vatStatus" name="vatStatus"/>
-        VAT Status</label>
+      <input type="checkbox" id="vatStatus" [(ngModel)]="client.vatStatus" name="vatStatus" />
+      <label for="vatStatus">VAT Status</label>
     </div>
 
     <div class="form-row-check">
-      <label for="vatCash"><input type="checkbox" id="vatCash" [(ngModel)]="client.vatCash" name="vatCash"/>
-        VAT Cash</label>
+      <input type="checkbox" id="vatCash" [(ngModel)]="client.vatCash" name="vatCash" />
+      <label for="vatCash">VAT Cash</label>
     </div>
 
+    <div class="form-row-check">
+      <input type="checkbox" id="status" [(ngModel)]="client.status" name="status" />
+      <label for="status">Status</label>
+    </div>  
 
     <div class="actions">
       <button type="submit" class="btn btn-primary">Save</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button (click)="goBack()" class="btn btn-secondary">Cancel</button>
     </div>
   </form>
 
-  <div *ngIf="successMessage" class="alert alert-success">
+  <div *ngIf="successMessage" class="success-popup">
+    <button class="close-popup" (click)="closeSuccessPopup()">&times;</button>
     {{ successMessage }}
   </div>
+
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
+
 </div>

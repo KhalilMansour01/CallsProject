@@ -7,7 +7,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
   margin-top: 2%;
-
+  position: relative;
 }
 
 .staff-form h2 {
@@ -22,9 +22,9 @@
   justify-content: space-between;
 }
 
-.staff-form div {
+/* .staff-form div {
   margin-bottom: 8px;
-}
+} */
 
 .staff-form label {
   display: block;
@@ -41,6 +41,14 @@
   font-size: 16px;
   background-color: #e9ecef;
 
+}
+
+.staff-form p {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #e9ecef;
+  font-size: 16px;
 }
 
 .form-row {
@@ -73,4 +81,21 @@
 
 .actions {
   margin-top: 15px;
+}
+
+.form-group1 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-left: 5px;
+}
+
+.form-group1 label {
+  font-weight: bold;
+  color: #555;
+  margin-right: 8px;
+}
+
+.form-group1 .value {
+  font-weight: normal;
 }

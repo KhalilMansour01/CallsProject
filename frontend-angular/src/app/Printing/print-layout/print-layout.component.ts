@@ -33,7 +33,7 @@ export class PrintLayoutComponent implements OnInit {
     }
   
     // Once the data is ready, trigger the print function
-    this.printService.onDataReady();
+    this.printService.onDataReady(this.callDetails);
   }
   
 }

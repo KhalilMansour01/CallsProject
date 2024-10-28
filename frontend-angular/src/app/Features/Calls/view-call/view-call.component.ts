@@ -78,9 +78,9 @@ export class ViewCallComponent implements OnInit {
     this.router.navigate(['/calls/list']);
   }
 
-  printCallDetails(): void {
-    window.print();
-  }
+  // printCallDetails(): void {
+  //   window.print();
+  // }
 
   printCall() {
     this.printService.printDocument(

@@ -5,7 +5,7 @@
 
     <div class="form-group">
       <label for="id">ID:</label>
-      <input type="text" id="id" required [(ngModel)]="staff.id" name="id" #id="ngModel" />
+      <input type="number" id="id" required [(ngModel)]="staff.id" name="id" #id="ngModel" />
     </div>
 
     <div class="form-group">
@@ -51,21 +51,21 @@
     </div>
 
     <div class="actions">
-      <button type="submit">Save</button>
-      <button (click)="goBack()" class="btn btn-secondary">Back</button>
+      <button type="submit">Add Staff</button>
+      <button (click)="goBack()" class="btn btn-secondary">Cancel</button>
     </div>
 
   </form>
 
   <div *ngIf="errorMessage && errorMessage.length > 0" class="error-popup">
-    <button class="close-popup" (click)="closeErrorPopup()">×</button>
+    <button class="close-popup" (click)="closeErrorPopup()">&times;</button>
     <ul>
       <li *ngFor="let message of errorMessage">{{ message }}</li>
     </ul>
   </div>
 
   <div *ngIf="successMessage" class="success-popup">
-    <button class="close-popup" (click)="closeSuccessPopup()">×</button>
+    <button class="close-popup" (click)="closeSuccessPopup()">&times;</button>
     {{ successMessage }}
   </div>
 

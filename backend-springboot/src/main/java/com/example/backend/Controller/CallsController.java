@@ -1,6 +1,11 @@
 package com.example.backend.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -57,30 +62,58 @@ public class CallsController {
         return callsService.deleteCallsById(id);
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<List<CallsEntity>> filterCalls(
-            @RequestParam(required = false) String fCat,
-            @RequestParam(required = false) Boolean open) {
+    // @GetMapping("/filter")
+    // public ResponseEntity<List<CallsEntity>> filterCalls(
+    //         @RequestParam(required = false) String fCat,
+    //         @RequestParam(required = false) Boolean open) {
 
-        List<CallsEntity> calls = callsService.filterCalls(fCat, open);
-        return ResponseEntity.ok().body(calls);
-    }
+    //     List<CallsEntity> calls = callsService.filterCalls(fCat, open);
+    //     return ResponseEntity.ok().body(calls);
+    // }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<CallsEntity>> searchCalls(
-            @RequestParam(required = false) String searchQuery) {
+    // @GetMapping("/search")
+    // public ResponseEntity<List<CallsEntity>> searchCalls(
+    //         @RequestParam(required = false) String searchQuery) {
 
-        List<CallsEntity> calls = callsService.searchCalls(searchQuery);
-        return ResponseEntity.ok().body(calls);
-    }
+    //     List<CallsEntity> calls = callsService.searchCalls(searchQuery);
+    //     return ResponseEntity.ok().body(calls);
+    // }
 
-    @GetMapping("/filterAndSearch")
-    public ResponseEntity<List<CallsEntity>> searchAndFilterCalls(
+    // @GetMapping("/filterAndSearch")
+    // public ResponseEntity<List<CallsEntity>> searchAndFilterCalls(
+    //         @RequestParam(required = false) String fCat,
+    //         @RequestParam(required = false) Boolean open,
+    //         @RequestParam(required = false) String searchQuery) {
+
+    //     List<CallsEntity> calls = callsService.filterAndSearchCalls(fCat, open, searchQuery);
+    //     return ResponseEntity.ok().body(calls);
+    // }
+
+    /*
+     * Advanced GET request to get paginated calls with sorting and filtering
+     */
+    @GetMapping("/advancedGet")
+    public ResponseEntity<Page<CallsEntity>> pagedCalls(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam(required = false) String fCat,
             @RequestParam(required = false) Boolean open,
             @RequestParam(required = false) String searchQuery) {
 
-        List<CallsEntity> calls = callsService.filterAndSearchCalls(fCat, open, searchQuery);
-        return ResponseEntity.ok().body(calls);
+        Sort sort = Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC,
+                sortField);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<CallsEntity> callsPage = callsService.paginatedCalls(pageable, fCat, open, searchQuery);
+
+        if (callsPage.hasContent()) {
+            return ResponseEntity.ok(callsPage);
+        } else {
+            return ResponseEntity.ok(new PageImpl<>(new ArrayList<>(), pageable, 0));
+            // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
     }
 }

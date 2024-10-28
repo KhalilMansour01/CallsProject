@@ -30,6 +30,9 @@ public class StaffEntity {
     @Column(name = "dpt_code")
     private String dptCode;
 
+    @Column(name = "status")
+    private boolean status = true;
+
     public BigDecimal getId() {
         return id;
     }
@@ -84,6 +87,14 @@ public class StaffEntity {
 
     public void setDptCode(String dptCode) {
         this.dptCode = dptCode;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+    
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     @Override

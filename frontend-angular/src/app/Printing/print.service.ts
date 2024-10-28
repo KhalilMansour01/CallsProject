@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 })
 export class PrintService {
 
+  callDetails: any = {};
+
   isPrinting = false;
 
   constructor(
@@ -24,11 +26,13 @@ export class PrintService {
   }
   
 
-  onDataReady() {
+  onDataReady(callDetails: any) {
     setTimeout(() => {
       window.print();
       this.isPrinting = false;
-      this.router.navigate(['/calls/list']); // Navigate back after printing
+      this.router.navigate([`/calls/view/${callDetails.id}`]);
+
+      // this.router.navigate(['/calls/list']);
     });
   }
 

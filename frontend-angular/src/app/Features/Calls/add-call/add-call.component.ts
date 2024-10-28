@@ -46,7 +46,7 @@ export class AddCallComponent implements OnInit {
         this.successMessage = 'Call added successfully!';
         this.printCall();
       },
-      error: (err: HttpErrorResponse) => {
+      error: (err: any) => {
         console.error('Error adding call:', err);
 
         if (err.error && err.error.message) {
@@ -68,7 +68,7 @@ export class AddCallComponent implements OnInit {
   loadClients(): void {
     this.clientsService.getClients().subscribe(
       (data) => {
-        this.clientsList = data;
+        this.clientsList = data.filter(client => client.status !== false);
       },
       (error) => {
         console.error('Error fetching clients data:', error);
@@ -79,7 +79,7 @@ export class AddCallComponent implements OnInit {
   loadStaff(): void {
     this.staffService.getStaff().subscribe(
       (data) => {
-        this.staffList = data;
+        this.staffList = data.filter(staff => staff.status !== false);
       },
       (error) => {
         console.error('Error fetching staff data:', error);

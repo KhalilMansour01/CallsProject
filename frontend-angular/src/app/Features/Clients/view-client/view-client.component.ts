@@ -46,8 +46,16 @@ export class ViewClientComponent implements OnInit {
     'WTB': 'WEST BEIRUT'
   };
 
+  cvlCodeMap: { [key: string]: string } = {
+    '1': 'Mr.',
+    '2': 'Mrs.',
+    '3': 'Dr.',
+    '4': 'None',
+  };
+
   countryKeys: string[];
   regionKeys: string[];
+  cvlCodeKeys: string[];
 
   successMessage: string | null = null;
   errorMessage: string | null = null;
@@ -64,6 +72,7 @@ export class ViewClientComponent implements OnInit {
 
     this.countryKeys = Object.keys(this.countryMap);
     this.regionKeys = Object.keys(this.regionMap);
+    this.cvlCodeKeys = Object.keys(this.cvlCodeMap);
   }
 
   getClientById(id: number): void {
@@ -103,5 +112,9 @@ export class ViewClientComponent implements OnInit {
 
   getRegionName(code: string): string {
     return this.regionMap[code] || 'Unknown';
+  }
+
+  getCvlCodeName(code: string): string {
+    return this.cvlCodeMap[code] || 'Unknown';
   }
 }

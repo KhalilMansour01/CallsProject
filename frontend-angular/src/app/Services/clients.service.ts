@@ -71,4 +71,45 @@ export class ClientsService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
   }
+
+  // Advanced get paginated clients
+  getPaginatedClients( 
+    pageNumber: number,
+    pageSize: number,
+    sortField: string = 'id',  
+    sortDirection: 'asc' | 'desc' = 'asc',
+    searchQuery?: string,
+    region?: string,
+    country?: string
+  ): Observable<any> {
+
+    let params = new HttpParams();
+
+    params = params.set('pageNumber', pageNumber.toString());
+    params = params.set('pageSize', pageSize.toString());
+    params = params.set('sortField', sortField);
+    params = params.set('sortDirection', sortDirection);
+
+    if (region) {
+      params = params.set('regCode', region);
+
+    }
+    if (country) {
+      params = params.set('cntrCode', country);
+    }
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/advancedGet`, { params });
+  }
+
+  // Search clients by name
+  searchByName(searchQuery: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/searchByName`, { params });
+  }
 }

@@ -5,39 +5,44 @@
 
     <div class="form-group">
       <label for="id">ID: </label>
-      <input type="text" id="id" required [(ngModel)]="staff.id" name="id" #id="ngModel" readonly />
+      <p id="id">{{ staff.id }}</p>
     </div>
     <div class="form-group">
       <label for="cvlCode">Civil Code:</label>
-      <input type="text" id="cvlCode" [value]="getCivilCode(staff.cvlCode)" name="cvlCode" readonly />
+      <p id="cvlCode">{{ getCivilCode(staff.cvlCode) }}</p>
     </div>
     <div class="form-group">
       <label for="firstName">First Name:</label>
-      <input type="text" id="firstName" required [(ngModel)]="staff.firstName" name="firstName" readonly />
+      <p>{{ staff.firstName || '-'}}</p>
     </div>
     <div class="form-group">
       <label for="middleName">Middle Name:</label>
-      <input type="text" id="middleName" [(ngModel)]="staff.middleName" name="middleName" readonly />
+      <p>{{ staff.middleName || '-'}}</p>
     </div>
     <div class="form-group">
       <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName" required [(ngModel)]="staff.lastName" name="lastName" readonly />
+      <p>{{ staff.lastName || '-'}}</p>
     </div>
     <div class="form-group">
       <label for="title">Title:</label>
-      <input type="text" id="title" [(ngModel)]="staff.title" name="title" readonly />
+      <p>{{ staff.title || '-'}}</p>
     </div>
 
     <div class="form-group">
-      <label for="dptCode">Department Code:</label>
-      <input type="text" id="dptCode" [value]="getDepartmentName(staff.dptCode)" name="dptCode" readonly />
+      <label for="dptCode">Department:</label>
+      <p>{{ getDepartmentName(staff.dptCode) }}</p>
+    </div>
+
+    <div class="form-group1">
+      <label for="status">Status:</label>
+      <span class="value">{{ staff.status ? 'Active' : 'Inactive' }}</span>
     </div>
 
     <div class="actions">
       <button (click)="editStaff()" class="btn btn-secondary">Edit</button>
       <button (click)="goBack()" class="btn btn-secondary">Back</button>
     </div>
-    
+
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">

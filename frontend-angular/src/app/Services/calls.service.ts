@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -71,4 +74,52 @@ export class CallsService {
     }
     return this.http.get<any[]>(`${this.apiUrl}/filterAndSearch`, { params });
   }
+
+  getPaginatedCalls(
+    pageNumber: number,
+    pageSize: number,
+    sortField: string = 'id',
+    sortDirection: 'asc' | 'desc' = 'asc',
+    searchQuery?: string,
+    fCat?: string,
+    open?: string
+    // staffIds?: number[],
+    // clientIds?: number[]
+  ): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.set('pageNumber', pageNumber.toString());
+    params = params.set('pageSize', pageSize.toString());
+    params = params.set('sortField', sortField);
+    params = params.set('sortDirection', sortDirection);
+
+    if (fCat) {
+      params = params.set('fCat', fCat);
+    }
+    if (open) {
+      params = params.set('open', open);
+    }
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+
+    // // Append staffIds list to the params
+    // if (staffIds && staffIds.length > 0) {
+    //   staffIds.forEach((id) => {
+    //     params = params.append('staffIds', id.toString());
+    //   });
+    // }
+
+    // // Append customerIds list to the params
+    // if (clientIds && clientIds.length > 0) {
+    //   clientIds.forEach((id) => {
+    //     params = params.append('customerIds', id.toString());
+    //   });
+    // }
+
+    console.log('Params:', params);
+    
+    return this.http.get<any>(`${this.apiUrl}/advancedGet`, { params });
+  }
+
 }

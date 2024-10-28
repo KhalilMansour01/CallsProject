@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +52,18 @@ public class CustomerService {
         if (entity.getId() == null) {
             errorMessages.append("- ID\n");
             missingFields = true;
+        } else {
+            String idString = entity.getId().toPlainString();
+            if (idString.length() > 5) {
+                errorMessages.append("- ID must be 5 digits or fewer\n");
+                missingFields = true;
+            }
+            if (entity.getId().compareTo(BigDecimal.ZERO) <= 0) {
+            errorMessages.append("- ID must be greater than zero\n");
+            missingFields = true;
         }
+        }
+        
         if (entity.getCustName() == null) {
             errorMessages.append("- Customer Name\n");
             missingFields = true;
@@ -137,6 +150,7 @@ public class CustomerService {
         if (entity.getAddress2() != null) {
             existingCustomer.setAddress2(entity.getAddress2());
         }
+        existingCustomer.setStatus(entity.getStatus());
 
         final CustomerEntity updatedCustomer = customerRepository.save(existingCustomer);
         return ResponseEntity.ok(updatedCustomer);
@@ -171,6 +185,26 @@ public class CustomerService {
                 .and(CustomerSpecifications.hasCountry(cntrCode))
                 .and(CustomerSpecifications.searchByMultipleFields(searchQuery));
 
+        return customerRepository.findAll(spec);
+    }
+
+    /*
+     * Advanced search with pagination
+     */
+    public Page<CustomerEntity> paginatedCustomers(Pageable pageable, String regCode, String cntrCode, String searchQuery) {
+        Specification<CustomerEntity> spec = Specification
+                .where(CustomerSpecifications.hasRegion(regCode))
+                .and(CustomerSpecifications.hasCountry(cntrCode))
+                .and(CustomerSpecifications.searchByMultipleFields(searchQuery));
+
+        return customerRepository.findAll(spec, pageable);
+    }
+
+    /*
+     * Search by name
+     */
+    public List<CustomerEntity> searchByName(String searchQuery) {
+        Specification<CustomerEntity> spec = CustomerSpecifications.searchByName(searchQuery);
         return customerRepository.findAll(spec);
     }
 

@@ -1,22 +1,21 @@
 <div class="client-form">
-
   <div *ngIf="client">
     <h2>View Client: {{ client.id }}</h2>
     <div class="form-group">
       <label for="id">ID: </label>
-      <input type="text" id="id" [(ngModel)]="client.id" name="id" #id="ngModel" readonly />
+      <p id="id">{{ client.id }}</p>
     </div>
 
     <div class="form-row">
 
       <div class="form-group">
         <label for="custName">Client Name:</label>
-        <input type="text" id="custName" [(ngModel)]="client.custName" name="custName" readonly />
+        <p>{{ client.custName }}</p>
       </div>
 
       <div class="form-group">
         <label for="cvlCode">Civil Code:</label>
-        <input type="text" id="cvlCode" [(ngModel)]="client.cvlCode" name="cvlCode" readonly />
+        <p>{{ client.cvlCode }}: {{ getCvlCodeName(client.cvlCode) }}</p>
       </div>
 
     </div>
@@ -25,12 +24,12 @@
 
       <div class="form-group">
         <label for="cntrCode">Country:</label>
-        <input type="text" id="cntrCode" [value]="getCountryName(client.cntrCode)" name="cntrCode" readonly />
+        <p>{{ getCountryName(client.cntrCode) }}</p>
       </div>
 
       <div class="form-group">
         <label for="regCode">Region:</label>
-        <input type="text" id="regCode" [value]="getRegionName(client.regCode)" name="regCode" readonly />
+        <p>{{ getRegionName(client.regCode) }}</p>
       </div>
 
     </div>
@@ -38,11 +37,11 @@
     <div class="form-row">
       <div class="form-group">
         <label for="fax">Fax:</label>
-        <input type="text" id="fax" [(ngModel)]="client.fax" name="fax" readonly />
+        <p>{{ client.fax || '-' }}</p>
       </div>
       <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" [(ngModel)]="client.email" name="email" readonly />
+        <p>{{ client.email || '-' }}</p>
       </div>
 
     </div>
@@ -51,49 +50,53 @@
 
       <div class="form-group">
         <label for="tel1">Telephone 1:</label>
-        <input type="tel" id="tel1" [(ngModel)]="client.tel1" name="tel1" readonly />
+        <p>{{ client.tel1 || '-' }}</p>
       </div>
 
       <div class="form-group">
         <label for="tel2">Telephone 2:</label>
-        <input type="tel" id="tel2" [(ngModel)]="client.tel2" name="tel2" readonly />
+        <p>{{ client.tel2 || '-' }}</p>
       </div>
 
       <div class="form-group">
         <label for="tel3">Telephone 3:</label>
-        <input type="tel" id="tel3" [(ngModel)]="client.tel3" name="tel3" readonly />
+        <p>{{ client.tel3 || '-' }}</p>
       </div>
-
     </div>
-
-
 
     <div class="form-group">
       <label for="contact">Contact:</label>
-      <input type="text" id="contact" [(ngModel)]="client.contact" name="contact" readonly />
+      <p>{{ client.contact || '-' }}</p>
     </div>
 
     <div class="form-group">
       <label for="address1">Address 1:</label>
-      <input type="text" id="address1" [(ngModel)]="client.address1" name="address1" readonly />
+      <p>{{ client.address1 || '-' }}</p>
     </div>
 
     <div class="form-group">
       <label for="address2">Address 2:</label>
-      <input type="text" id="address2" [(ngModel)]="client.address2" name="address2" readonly />
+      <p>{{ client.address2 || '-' }}</p>
     </div>
 
-    <div class="form-group">
-      <label for="vatStatus">VAT Status: {{ client.vatStatus ? 'Yes' : 'No' }}</label>
+    <div class="form-group1">
+      <label for="vatStatus">VAT Status:</label>
+      <span class="value">{{ client.vatStatus ? 'Yes' : 'No' }}</span>
     </div>
 
-    <div class="form-group">
-      <label for="vatCash">VAT Cash: {{ client.vatCash ? 'Yes' : 'No' }}</label>
+    <div class="form-group1">
+      <label for="vatCash">VAT Cash:</label>
+      <span class="value">{{ client.vatCash ? 'Yes' : 'No' }}</span>
     </div>
+    
+    <div class="form-group1">
+      <label for="status">Status:</label>
+      <span class="value">{{ client.status ? 'Active' : 'Inactive' }}</span>
+    </div>
+
 
     <div class="actions">
       <button (click)="editClient()" class="btn btn-secondary">Edit</button>
-
       <button (click)="goBack()" class="btn btn-secondary">Back</button>
     </div>
   </div>

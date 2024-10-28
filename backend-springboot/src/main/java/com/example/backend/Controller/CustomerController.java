@@ -1,6 +1,11 @@
 package com.example.backend.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -84,4 +89,44 @@ public class CustomerController {
         List<CustomerEntity> customers = customerService.filterAndSearchCustomers(regCode, cntrCode, searchQuery);
         return ResponseEntity.ok(customers);
     }
+
+    /*
+     * Advanced GET request to fetch paginated customers with sorting and filtering
+     */
+    @GetMapping("/advancedGet")
+    public ResponseEntity<Page<CustomerEntity>> pagedCustomers(
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) String regCode,
+            @RequestParam(required = false) String cntrCode,
+            @RequestParam(required = false) String searchQuery) {
+
+        Sort sort = Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC,
+                sortField);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<CustomerEntity> customersPage = customerService.paginatedCustomers(pageable, regCode, cntrCode,
+                searchQuery);
+
+        if (customersPage.hasContent()) {
+            return ResponseEntity.ok(customersPage);
+        } else {
+            return ResponseEntity.ok(new PageImpl<>(new ArrayList<>(), pageable, 0));
+            // return ResponseEntity.noContent().build();
+        }
+    }
+
+    /*
+     * Search customers by name
+     */
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<CustomerEntity>> searchByName(
+            @RequestParam(required = false) String searchQuery) {
+        List<CustomerEntity> customers = customerService.searchByName(searchQuery);
+        return ResponseEntity.ok(customers);
+    }
+
 }

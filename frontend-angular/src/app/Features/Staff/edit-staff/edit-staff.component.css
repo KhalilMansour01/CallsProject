@@ -59,6 +59,28 @@
   margin-right: 0;
 }
 
+.form-row-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-row-check label {
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.form-row-check input[type="checkbox"] {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#status {
+  width: min-content;
+  margin-left: 5px;
+}
+
 #id,
 #cvlCode {
   width: 20%;
@@ -67,7 +89,6 @@
 #id {
   background-color: #e9ecef;
 }
-
 
 .form-group {
   margin-left: 5px;
